@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>IDESourceControlProjectFavoriteDictionaryKey</key>
+	<false/>
+	<key>IDESourceControlProjectIdentifier</key>
+	<string>4066BE9A-1605-4E83-BB51-1F44F48A900A</string>
+	<key>IDESourceControlProjectName</key>
+	<string>project</string>
+	<key>IDESourceControlProjectOriginsDictionary</key>
+	<dict>
+		<key>8E9BEE7DDD5BEE78F49F5A54320314222E118C9B</key>
+		<string>https://github.com/romano2717/comr-16.git</string>
+	</dict>
+	<key>IDESourceControlProjectPath</key>
+	<string>comress.xcodeproj/project.xcworkspace</string>
+	<key>IDESourceControlProjectRelativeInstallPathDictionary</key>
+	<dict>
+		<key>8E9BEE7DDD5BEE78F49F5A54320314222E118C9B</key>
+		<string>../..</string>
+	</dict>
+	<key>IDESourceControlProjectURL</key>
+	<string>https://github.com/romano2717/comr-16.git</string>
+	<key>IDESourceControlProjectVersion</key>
+	<integer>111</integer>
+	<key>IDESourceControlProjectWCCIdentifier</key>
+	<string>8E9BEE7DDD5BEE78F49F5A54320314222E118C9B</string>
+	<key>IDESourceControlProjectWCConfigurations</key>
+	<array>
+		<dict>
+			<key>IDESourceControlRepositoryExtensionIdentifierKey</key>
+			<string>public.vcs.git</string>
+			<key>IDESourceControlWCCIdentifierKey</key>
+			<string>8E9BEE7DDD5BEE78F49F5A54320314222E118C9B</string>
+			<key>IDESourceControlWCCName</key>
+			<string>comress</string>
+		</dict>
+	</array>
+</dict>
+</plist>

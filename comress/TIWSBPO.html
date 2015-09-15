@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+
+<html>
+    
+    <head>
+        <meta charset="utf-8">
+            
+            <title></title>
+            <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                <link href="css/bootstrap.min.css" rel="stylesheet" media="screen">
+                    <link href="css/bootstrap-responsive.min.css" rel="stylesheet">
+    </head>
+    
+    <body>
+        <!-- Add your site or application content here -->
+        
+        <script src="js/vendor/jquery-2.1.0.min.js"></script>
+        <script src="js/lib.js"></script>
+        <script src='https://www.google.com/jsapi' type='text/javascript'></script>
+            <script type="text/javascript">
+            
+            var jsonChartOBject;
+            
+            google.load("visualization", "1", {
+            packages: ["corechart"]
+            });
+            
+            $(window).resize(function(){
+            console.log("redraw")
+            drawChart();
+            });
+            
+            function requestData(encodedJson) {
+            var jsonObject = jSonise(encodedJson);
+            
+            $.ajaxSetup({
+            beforeSend: function(xhr) {
+            xhr.setRequestHeader('ComSessionId', jsonObject.session);
+            }
+            });
+            $.ajax({
+            type: "POST",
+            url: jsonObject.url,
+            data: JSON.stringify({
+            "startDate": "" + jsonObject.startDate + "",
+            "endDate": "" + jsonObject.endDate + ""
+            }),
+            dataType: "json",
+            contentType: "application/json; charset=utf-8",
+            crossDomain: true,
+            success: function(result) {
+            jsonChartOBject = result;
+            drawChart();
+            },
+            error: function(request, status, error) {
+            alert("request error " + error);
+            }
+            });
+            }
+            
+            function drawChart() {
+            var IssueReportContainer = jsonChartOBject.IssueReportContainer;
+            var IssueReport = IssueReportContainer.IssueReport
+            var IssueReportOfOthers = IssueReportContainer.IssueReportOfOthers
+            
+            
+            var data = new google.visualization.DataTable();
+            
+            var headersArray = ['Contract type', 'Pending', 'In-Progress', 'Close', 'Overdue']
+            
+            data.addColumn('string', headersArray[0])
+            data.addColumn('number', headersArray[1])
+            data.addColumn('number', headersArray[2])
+            data.addColumn('number', headersArray[3])
+            data.addColumn('number', headersArray[4])
+            
+            
+            
+            //create rows
+            var rows = [];
+            for (i = 0; i < IssueReport.length; i++) {
+            var IssueReportContainerObj = IssueReport[i];
+            
+            ContractTypeDes = IssueReportContainerObj['ContractTypeDes'];
+            
+            TotalComressPending = parseInt(IssueReportContainerObj['TotalComressPending'])
+            TotalComressInProcess = parseInt(IssueReportContainerObj['TotalComressInProcess'])
+            TotalComressClose = parseInt(IssueReportContainerObj['TotalComressClose'])
+            TotalComressOutstandingOverdue = parseInt(IssueReportContainerObj['TotalComressOutstandingOverdue'])
+            
+            
+            data.addRows([
+            [
+            ContractTypeDes,
+            TotalComressPending,
+            TotalComressInProcess,
+            TotalComressClose,
+            TotalComressOutstandingOverdue
+            ]
+            ])
+            
+            };
+            
+            
+            var view = new google.visualization.DataView(data);
+            view.setColumns([
+            0,
+            1, {
+            calc: function(dt, row) {
+            if (dt.getFormattedValue(row, 1) > 0)
+            return dt.getFormattedValue(row, 1);
+            else
+            return null
+            },
+            sourceColumn: 1,
+            type: "string",
+            role: "annotation"
+            },
+            
+            2, {
+            calc: function(dt, row) {
+            if (dt.getFormattedValue(row, 2) > 0)
+            return dt.getFormattedValue(row, 2);
+            else
+            return null
+            },
+            sourceColumn: 2,
+            type: "string",
+            role: "annotation"
+            },
+            
+            3, {
+            calc: function(dt, row) {
+            if (dt.getFormattedValue(row, 3) > 0)
+            return dt.getFormattedValue(row, 3);
+            else
+            return null
+            },
+            sourceColumn: 3,
+            type: "string",
+            role: "annotation"
+            },
+            
+            4, {
+            calc: function(dt, row) {
+            if (dt.getFormattedValue(row, 4) > 0)
+            return dt.getFormattedValue(row, 4);
+            else
+            return null
+            },
+            sourceColumn: 4,
+            type: "string",
+            role: "annotation"
+            }
+            ])
+            
+            var colorsArray = ["#ffc600", "#c6ff00", "#ff00de", "#06ff00", "#c2c2c2", "#8b6e0b", "#85a80c", "#9b0a88"];
+            
+            var options = {
+            width: "100%",
+            height: 500,
+            legend: {
+            position: 'right',
+            maxLines: 10
+            },
+            bar: {
+            groupWidth: '95%'
+            },
+            isStacked: true,
+            series: {
+            0: {
+            color: colorsArray[0]
+            },
+            1: {
+            color: colorsArray[1]
+            },
+            2: {
+            color: colorsArray[2]
+            },
+            3: {
+            color: colorsArray[3]
+            },
+            4: {
+            color: colorsArray[4]
+            }
+            }
+            };
+            
+            var chart = new google.visualization.ColumnChart(document.getElementById("columnchart_values"));
+            chart.draw(view, options);
+            
+            $("#row").html("")
+            $("#row").nextAll().remove()
+            total_pending = 0
+            total_inProgress = 0
+            total_close = 0
+            total_overdue = 0;
+            
+            for(i = 0; i < IssueReportOfOthers.length; i++)
+            {
+            IssueReportOfOthersObj = IssueReportOfOthers[i]
+            
+            UserId = IssueReportOfOthersObj['UserId']
+            ContractTypeDes = IssueReportOfOthersObj['ContractTypeDes']
+            TotalComressPending = IssueReportOfOthersObj['TotalComressPending']
+            TotalComressInProcess = IssueReportOfOthersObj['TotalComressInProcess']
+            TotalComressClose = IssueReportOfOthersObj['TotalComressClose']
+            TotalComressOutstandingOverdue = IssueReportOfOthersObj['TotalComressOutstandingOverdue']
+            
+            total_pending += TotalComressPending
+            total_inProgress += TotalComressInProcess
+            total_close += TotalComressClose
+            total_overdue += TotalComressOutstandingOverdue
+            
+            $("#row").append("<tr> <td>"+UserId+"</td>  <td>"+ContractTypeDes+"</td>  <td>"+TotalComressPending+"</td>  <td>"+TotalComressInProcess+"</td> <td>"+TotalComressClose+"</td> <td>"+TotalComressOutstandingOverdue+"</td> </tr>")
+            }
+            
+            $("#row").after("<tfoot><tr> <td colspan='2'><b>Total</b></td> <td><b>"+total_pending+"</b></td> <td><b>"+total_inProgress+"</b></td> <td><b>"+total_close+"</b></td> <td><b>"+total_overdue+"</b></td></tr></tfoot>")
+            }
+            </script>
+            <div id="columnchart_values" style="width: 650px; height: 500px;"></div>
+            <div class="table-responsive" style="width:450px;margin-left:100px">
+            <table class="table">
+            <tr>
+            <th>User</th>
+            <th>Contract type</th>
+            <th>Pending</th>
+            <th>In-Progress</th>
+            <th>Close</th>
+            <th>Overdue</th>
+            </tr>
+            <tbody id='row'>
+            
+            </tbody>
+            </table>
+            </div>
+            </body>
+            
+            </html>

@@ -1,0 +1,23 @@
+.mapLabelYes{
+    font-weight: bold;
+    color: #fff;
+    font-size: 8px;
+    background-color: #027b13;
+    padding:2px;
+}
+
+.mapLabelNo{
+    font-weight: bold;
+    color: #fff;
+    font-size: 8px;
+    background-color: #ff0000;
+    padding:2px;
+}
+
+.mapLabelNeutral{
+    font-weight: bold;
+    color: #fff;
+    font-size: 8px;
+    background-color: #d7ac00;
+    padding:2px;
+}
