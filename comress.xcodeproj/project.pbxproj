@@ -41,6 +41,8 @@
 		4D1265CF1AE2C83400D9A512 /* Routine_05@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1265CD1AE2C83400D9A512 /* Routine_05@2x.png */; };
 		4D1265D11AE3533E00D9A512 /* status_bubble.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1265D01AE3533E00D9A512 /* status_bubble.png */; };
 		4D1BA9C31B3BA3320091980C /* IssuesPerPoTableViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1BA9C21B3BA3320091980C /* IssuesPerPoTableViewCell.m */; };
+		4D1CA9601BA9412B00E223D5 /* PerformCheckListViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1CA95F1BA9412B00E223D5 /* PerformCheckListViewController.m */; };
+		4D1CA9661BA943F100E223D5 /* CheckListCustomCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D1CA9651BA943F100E223D5 /* CheckListCustomCell.m */; };
 		4D1FCE191ADB9C1E005381FA /* residentInfo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1FCE181ADB9C1E005381FA /* residentInfo.png */; };
 		4D1FCE1B1ADB9D18005381FA /* user@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D1FCE1A1ADB9D18005381FA /* user@2x.png */; };
 		4D2604FD1ADE169800C8E140 /* FeedBackInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D2604FC1ADE169800C8E140 /* FeedBackInfoViewController.m */; };
@@ -323,6 +325,7 @@
 		4DF666B41AA9615300C3B0FF /* NavigationBarTitleWithSubtitleView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DF666B31AA9615300C3B0FF /* NavigationBarTitleWithSubtitleView.m */; };
 		4DF6B7491BA0246D0053EEF7 /* VisibleFormViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6B7481BA0246D0053EEF7 /* VisibleFormViewController.m */; };
 		4DF6B74D1BA188C90053EEF7 /* ImageViewerViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6B74C1BA188C90053EEF7 /* ImageViewerViewController.m */; };
+		4DF6B7541BA90F580053EEF7 /* ScheduleActionsViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4DF6B7531BA90F580053EEF7 /* ScheduleActionsViewController.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -394,6 +397,10 @@
 		4D1265D01AE3533E00D9A512 /* status_bubble.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = status_bubble.png; sourceTree = "<group>"; };
 		4D1BA9C11B3BA3320091980C /* IssuesPerPoTableViewCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IssuesPerPoTableViewCell.h; sourceTree = "<group>"; };
 		4D1BA9C21B3BA3320091980C /* IssuesPerPoTableViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IssuesPerPoTableViewCell.m; sourceTree = "<group>"; };
+		4D1CA95E1BA9412B00E223D5 /* PerformCheckListViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PerformCheckListViewController.h; sourceTree = "<group>"; };
+		4D1CA95F1BA9412B00E223D5 /* PerformCheckListViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PerformCheckListViewController.m; sourceTree = "<group>"; };
+		4D1CA9641BA943F100E223D5 /* CheckListCustomCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CheckListCustomCell.h; sourceTree = "<group>"; };
+		4D1CA9651BA943F100E223D5 /* CheckListCustomCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CheckListCustomCell.m; sourceTree = "<group>"; };
 		4D1FCE181ADB9C1E005381FA /* residentInfo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = residentInfo.png; sourceTree = "<group>"; };
 		4D1FCE1A1ADB9D18005381FA /* user@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "user@2x.png"; sourceTree = "<group>"; };
 		4D2604FB1ADE169800C8E140 /* FeedBackInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FeedBackInfoViewController.h; sourceTree = "<group>"; };
@@ -879,6 +886,8 @@
 		4DF6B7481BA0246D0053EEF7 /* VisibleFormViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VisibleFormViewController.m; sourceTree = "<group>"; };
 		4DF6B74B1BA188C90053EEF7 /* ImageViewerViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImageViewerViewController.h; sourceTree = "<group>"; };
 		4DF6B74C1BA188C90053EEF7 /* ImageViewerViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImageViewerViewController.m; sourceTree = "<group>"; };
+		4DF6B7521BA90F580053EEF7 /* ScheduleActionsViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScheduleActionsViewController.h; sourceTree = "<group>"; };
+		4DF6B7531BA90F580053EEF7 /* ScheduleActionsViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScheduleActionsViewController.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1022,6 +1031,17 @@
 				4D1265C91AE2C7AF00D9A512 /* 1_05@2x.png */,
 			);
 			name = "from design";
+			sourceTree = "<group>";
+		};
+		4D1CA95A1BA93FFA00E223D5 /* CHECKLIST */ = {
+			isa = PBXGroup;
+			children = (
+				4D1CA95E1BA9412B00E223D5 /* PerformCheckListViewController.h */,
+				4D1CA95F1BA9412B00E223D5 /* PerformCheckListViewController.m */,
+				4D1CA9641BA943F100E223D5 /* CheckListCustomCell.h */,
+				4D1CA9651BA943F100E223D5 /* CheckListCustomCell.m */,
+			);
+			name = CHECKLIST;
 			sourceTree = "<group>";
 		};
 		4D2496401AE64013008A786E /* mzform */ = {
@@ -2061,6 +2081,8 @@
 		4DD932011B9999EC00396A34 /* JOB/SCHED DETAIL */ = {
 			isa = PBXGroup;
 			children = (
+				4D1CA95A1BA93FFA00E223D5 /* CHECKLIST */,
+				4DF6B7511BA90F3B0053EEF7 /* ACTIONS */,
 				4DF6B74A1BA188B30053EEF7 /* IMAGE VIEWER */,
 				4DE387CB1B9EE75A00017ABF /* IMAGE PREVIEW AND CAPTION */,
 				4DE387C61B9ECCDE00017ABF /* SchedDetailViewController.h */,
@@ -2194,6 +2216,15 @@
 				4DF6B74C1BA188C90053EEF7 /* ImageViewerViewController.m */,
 			);
 			name = "IMAGE VIEWER";
+			sourceTree = "<group>";
+		};
+		4DF6B7511BA90F3B0053EEF7 /* ACTIONS */ = {
+			isa = PBXGroup;
+			children = (
+				4DF6B7521BA90F580053EEF7 /* ScheduleActionsViewController.h */,
+				4DF6B7531BA90F580053EEF7 /* ScheduleActionsViewController.m */,
+			);
+			name = ACTIONS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2461,6 +2492,7 @@
 				4DA207E91A79DA0A00C7E5C7 /* JSQMessagesToolbarButtonFactory.m in Sources */,
 				4D2604FD1ADE169800C8E140 /* FeedBackInfoViewController.m in Sources */,
 				4DA207FE1A79DA0A00C7E5C7 /* JSQMessagesLoadEarlierHeaderView.m in Sources */,
+				4DF6B7541BA90F580053EEF7 /* ScheduleActionsViewController.m in Sources */,
 				4DA207F61A79DA0A00C7E5C7 /* JSQMessagesCollectionViewCell.m in Sources */,
 				4DD6FEAA1A884CFF00CBBE1D /* UIImage+WebP.m in Sources */,
 				4DA208031A79DA0A00C7E5C7 /* JSQMessagesTypingIndicatorFooterView.m in Sources */,
@@ -2478,6 +2510,7 @@
 				4DF6B7491BA0246D0053EEF7 /* VisibleFormViewController.m in Sources */,
 				4DA207DE1A79DA0A00C7E5C7 /* UIColor+JSQMessages.m in Sources */,
 				4DD5462F1B9E8D5C00543B81 /* ScheduleTableViewCell.m in Sources */,
+				4D1CA9601BA9412B00E223D5 /* PerformCheckListViewController.m in Sources */,
 				4DD99F2F1B05A4E2005E5F3E /* ReportFiltersViewController.m in Sources */,
 				4D85E6A81AD7832700170D66 /* CustomBadge.m in Sources */,
 				4DA207DD1A79DA0A00C7E5C7 /* NSString+JSQMessages.m in Sources */,
@@ -2595,6 +2628,7 @@
 				4DD6FEA11A884CFF00CBBE1D /* SDWebImageCompat.m in Sources */,
 				4DA209501A7A379B00C7E5C7 /* ActivationViewController.m in Sources */,
 				4DA207EA1A79DA0A00C7E5C7 /* JSQMessagesCollectionViewFlowLayout.m in Sources */,
+				4D1CA9661BA943F100E223D5 /* CheckListCustomCell.m in Sources */,
 				4DAC166A1B0F1878009EC12B /* IssueListPerPoViewController.m in Sources */,
 				4DE387C81B9ECCDE00017ABF /* SchedDetailViewController.m in Sources */,
 				4D0C2F891A7B4C88009E5E53 /* Comment_noti.m in Sources */,

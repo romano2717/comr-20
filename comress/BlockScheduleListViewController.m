@@ -263,7 +263,7 @@
             });
         }
     }];
-    
+
     return scheduleisExists;
 }
 
@@ -302,7 +302,6 @@
         NSString *wcfDate = [myDatabase createWcfDateWithNsDate:date];
         
         NSDictionary *params = @{@"scheduledDate":wcfDate};
-        
         
         [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url ,api_download_block_schedule] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
             

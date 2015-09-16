@@ -22,6 +22,11 @@
     // Do any additional setup after loading the view.
     
     myDatabase = [Database sharedMyDbManager];
+}
+
+- (void)viewDidAppear:(BOOL)animated
+{
+    [super viewDidAppear:animated];
     
     [self getJobList];
 }

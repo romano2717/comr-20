@@ -25,4 +25,8 @@
 
 - (void)uploadScheduleImageFromSelf:(BOOL)fromSelf;
 
+- (void)uploadScheduleUpdateFromSelf:(BOOL)fromSelf;
+
+- (void)uploadCheckListUpdateFromSelf:(BOOL)fromSelf;
+
 @end

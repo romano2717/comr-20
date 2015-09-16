@@ -8,7 +8,7 @@
 
 #import "SchedDetailViewController.h"
 
-@interface SchedDetailViewController ()<UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate,UINavigationControllerDelegate,UITextViewDelegate>
+@interface SchedDetailViewController ()<UITableViewDataSource, UITableViewDelegate, UIGestureRecognizerDelegate, UIImagePickerControllerDelegate, UIActionSheetDelegate,UINavigationControllerDelegate,UITextViewDelegate,MZFormSheetBackgroundWindowDelegate>
 
 @property (nonatomic, weak) IBOutlet UILabel *scheduleDateLabel;
 @property (nonatomic, weak) IBOutlet UILabel *statusLabel;
@@ -29,6 +29,8 @@
 
 @property (nonatomic) int scheduleImagePairCounter;
 
+@property (nonatomic) BOOL photoPairIsOk;
+
 @end
 
 @implementation SchedDetailViewController
@@ -38,6 +40,7 @@
     // Do any additional setup after loading the view.
     
     myDatabase = [Database sharedMyDbManager];
+    routineSync = [RoutineSynchronize sharedRoutineSyncManager];
     
     /**********/
     
@@ -48,8 +51,6 @@
 //        [db executeUpdate:@"delete from rt_schedule_image"];
 //    }];
     /**********/
-    
-    [self getScheduleDetail];
     
     //add border to remarks textview
     [[_remarksTextView layer] setBorderColor:[[UIColor lightGrayColor] CGColor]];
@@ -63,6 +64,10 @@
     self.lastVisibleView = _okButton;
     
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(retrieveLocalScheduleDetail) name:@"retrieveLocalScheduleDetail" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(setScheduleAction:) name:@"setScheduleAction" object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(updateCheckList:) name:@"updateCheckList" object:nil];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -98,6 +103,8 @@
     [self.navigationItem setTitleView: navigationBarTitleView];
     [navigationBarTitleView setTitleText:[_jobDetailDict valueForKey:@"blockDesc"]];
     [navigationBarTitleView setDetailText:[_jobDetailDict valueForKey:@"JobType"]];
+    
+    [self getScheduleDetail];
 }
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
@@ -107,6 +114,8 @@
 
 - (void)retrieveLocalScheduleDetail
 {
+    _photoPairIsOk = YES;
+    
     //get schedule from local db
     
     NSMutableDictionary *mutScheduleDict = [[NSMutableDictionary alloc] init];
@@ -194,6 +203,9 @@
             while ([rsGetPairPerChecklistForAfterImg next]) {
                 afterImagesPair = [rsGetPairPerChecklistForAfterImg intForColumn:@"afterPair"];
             }
+            
+            if(beforeImagesPair < [MinNoOfImage intValue] || afterImagesPair < [MinNoOfImage intValue])
+                _photoPairIsOk = NO;
             
             NSDictionary *dict = @{@"CheckListId":CheckListId,@"MinNoOfImage":MinNoOfImage,@"ScheduleId":ScheduleId,@"Title":Title,@"beforeImagesPair":[NSNumber numberWithInt:beforeImagesPair],@"afterImagesPair":[NSNumber numberWithInt:afterImagesPair]};
             
@@ -309,7 +321,6 @@
         
         //PHOTO COUNT
         int MinNumberOfPair = [[[_scheduleDetailDictionary objectForKey:@"ImageConfig"] valueForKey:@"MinNumberOfPair"] intValue];
-        int MinNumberOfImage = [[[_scheduleDetailDictionary objectForKey:@"ImageConfig"] valueForKey:@"MinNumberOfImage"] intValue];
         int scheduleImageStatus = [[[_scheduleDetailDictionary objectForKey:@"ImageConfig"] valueForKey:@"Status"] intValue];
         
         if(scheduleImageStatus != 1)
@@ -397,6 +408,8 @@
 
 - (void)getScheduleDetail
 {
+    [MBProgressHUD showHUDAddedTo:self.view animated:YES];
+    
     NSDictionary *params = @{@"scheduleId":[_jobDetailDict valueForKey:@"ScheduleId"],@"ignoreCache":[NSNumber numberWithBool:NO]};
     
     [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url ,api_get_schedule_detail_by_sup] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
@@ -410,6 +423,8 @@
         }
         else
             [self retrieveLocalScheduleDetail];
+        
+        [MBProgressHUD hideAllHUDsForView:self.view animated:YES];
         
         
     } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
@@ -654,18 +669,22 @@
 #pragma mark image picker
 - (void)openMediaByType:(int)type
 {
-    UIImagePickerController *picker = [[UIImagePickerController alloc] init];
-    picker.modalPresentationStyle = UIModalPresentationFullScreen;
-    if (type == 1)
-        picker.sourceType = UIImagePickerControllerSourceTypeCamera;
-    else
-        picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
-    
-    picker.delegate = self;
-    
-    self.imagePicker = picker;
-    
-    [self presentViewController:picker animated:YES completion:nil];
+    //check first if the schedule has been started, if not. don't allow to add photos yet
+    if([self isTheScheduleStarted])
+    {
+        UIImagePickerController *picker = [[UIImagePickerController alloc] init];
+        picker.modalPresentationStyle = UIModalPresentationFullScreen;
+        if (type == 1)
+            picker.sourceType = UIImagePickerControllerSourceTypeCamera;
+        else
+            picker.sourceType = UIImagePickerControllerSourceTypePhotoLibrary;
+        
+        picker.delegate = self;
+        
+        self.imagePicker = picker;
+        
+        [self presentViewController:picker animated:YES completion:nil];
+    }
 }
 
 - (void)imagePickerController:(UIImagePickerController *)picker didFinishPickingMediaWithInfo:(NSDictionary *)info
@@ -685,6 +704,210 @@
     NSDictionary *dict = @{@"image":thumbImage,@"_selectedImageTemplateDict":_selectedImageTemplateDict,@"imageType":[NSNumber numberWithInt:_imageType]};
 
     [self performSegueWithIdentifier:@"push_image_preview_caption" sender:dict];
+}
+
+- (IBAction)okButtonTap:(id)sender
+{
+    if([self isTheScheduleStarted])
+    {
+        [self startJobWithStatus:-1];
+        
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"COMRESS" message:@"Updated!" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+        
+        [alert show];
+    }
+}
+
+- (BOOL)isTheScheduleStarted
+{
+    int status = [[_scheduleDetailDictionary valueForKeyPath:@"SUPSchedule.Status"] intValue];
+    
+    if(status == 1) //new
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"COMRESS" message:@"You need to START this job first before adding pictures or remarks" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+        
+        [alert show];
+        
+        [self scheduleActions:self];
+        
+        return NO;
+    }
+    
+    return YES;
+}
+
+#pragma mark - schedule actions
+- (IBAction)scheduleActions:(id)sender
+{
+    ScheduleActionsViewController *schedAction = [self.storyboard instantiateViewControllerWithIdentifier:@"ScheduleActionsViewController"];
+    schedAction.scheduleDict = _scheduleDetailDictionary;
+    
+    MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:schedAction];
+    
+    formSheet.presentedFormSheetSize = CGSizeMake(300, 180);
+    formSheet.shadowRadius = 2.0;
+    formSheet.shadowOpacity = 0.3;
+    formSheet.shouldDismissOnBackgroundViewTap = YES;
+    formSheet.shouldCenterVertically = YES;
+    formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
+    
+    // If you want to animate status bar use this code
+    formSheet.didTapOnBackgroundViewCompletionHandler = ^(CGPoint location) {
+        
+    };
+    
+    formSheet.willPresentCompletionHandler = ^(UIViewController *presentedFSViewController) {
+        DDLogVerbose(@"will present");
+    };
+    formSheet.transitionStyle = MZFormSheetTransitionStyleCustom;
+    
+    [MZFormSheetController sharedBackgroundWindow].formSheetBackgroundWindowDelegate = self;
+    
+    [self mz_presentFormSheetController:formSheet animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+        DDLogVerbose(@"did present");
+    }];
+    
+    formSheet.willDismissCompletionHandler = ^(UIViewController *presentedFSViewController) {
+        DDLogVerbose(@"will dismiss");
+    };
+}
+
+
+- (void)setScheduleAction:(NSNotification *)notif
+{
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+    
+    NSDictionary *dict = [notif userInfo];
+    
+    NSString *action = [[dict valueForKey:@"action"] lowercaseString];
+    
+    //Start",@"Perform Checklist",@"Complete",@"Cancel
+    
+    if([action isEqualToString:@"start"])
+    {
+        [self startJobWithStatus:2];
+    }
+    else if([action isEqualToString:@"perform checklist"])
+    {
+        [self performChecklist];
+    }
+    else if ([action isEqualToString:@"complete"])
+    {
+        [self completeJob];
+    }
+    else if ([action isEqualToString:@"cancel"])
+    {
+        DDLogVerbose(@"cancel");
+    }
+    
+    //reload!
+    [self retrieveLocalScheduleDetail];
+}
+
+- (void)startJobWithStatus:(int)status
+{
+    if(status == -1)
+        status = [[[_scheduleDetailDictionary objectForKey:@"SUPSchedule"] valueForKey:@"Status"] intValue]; //current status
+    
+    NSNumber *scheduleId = [NSNumber numberWithInt:[[[_scheduleDetailDictionary objectForKey:@"SUPSchedule"] valueForKey:@"ScheduleId"] intValue]];
+    NSNumber *theStatus = [NSNumber numberWithInt:status];
+    NSString *remarks = _remarksTextView.text ? _remarksTextView.text : @"";
+    
+    
+    NSNumber *needToSync = [NSNumber numberWithInt:2];
+
+    [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        BOOL up = [db executeUpdate:@"update rt_schedule_detail set status = ?, remarks = ?, sync_flag = ? where schedule_id = ?",theStatus,remarks,needToSync, scheduleId];
+        
+        if(!up)
+        {
+            *rollback = YES;
+            return;
+        }
+    }];
+    
+    [routineSync uploadScheduleUpdateFromSelf:NO];
+}
+
+- (void)performChecklist
+{
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        PerformCheckListViewController *checkList = [self.storyboard instantiateViewControllerWithIdentifier:@"PerformCheckListViewController"];
+        checkList.scheduleDict = _scheduleDetailDictionary;
+        
+        MZFormSheetController *formSheet = [[MZFormSheetController alloc] initWithViewController:checkList];
+        
+        formSheet.presentedFormSheetSize = CGSizeMake(300, 350);
+        formSheet.shadowRadius = 2.0;
+        formSheet.shadowOpacity = 0.3;
+        formSheet.shouldDismissOnBackgroundViewTap = YES;
+        formSheet.shouldCenterVertically = YES;
+        formSheet.movementWhenKeyboardAppears = MZFormSheetWhenKeyboardAppearsCenterVertically;
+        
+        // If you want to animate status bar use this code
+        formSheet.didTapOnBackgroundViewCompletionHandler = ^(CGPoint location) {
+            
+        };
+        
+        formSheet.willPresentCompletionHandler = ^(UIViewController *presentedFSViewController) {
+            DDLogVerbose(@"will present");
+        };
+        formSheet.transitionStyle = MZFormSheetTransitionStyleCustom;
+        
+        [MZFormSheetController sharedBackgroundWindow].formSheetBackgroundWindowDelegate = self;
+        
+        [self mz_presentFormSheetController:formSheet animated:YES completionHandler:^(MZFormSheetController *formSheetController) {
+            DDLogVerbose(@"did present");
+        }];
+        
+        formSheet.willDismissCompletionHandler = ^(UIViewController *presentedFSViewController) {
+            DDLogVerbose(@"will dismiss");
+        };
+    });
+}
+
+- (void)updateCheckList:(NSNotification *)notif
+{
+    [self mz_dismissFormSheetControllerAnimated:YES completionHandler:nil];
+    
+    [routineSync uploadCheckListUpdateFromSelf:NO];
+}
+
+- (void)completeJob
+{
+    int scheduleImageStatus = [[[_scheduleDetailDictionary objectForKey:@"ImageConfig"] valueForKey:@"Status"] intValue];
+    
+    if(scheduleImageStatus == 1)//optional images
+    {
+        [self startJobWithStatus:3]; //complete
+    }
+    else if (scheduleImageStatus == 2)// minimum required pair
+    {
+        int MinNumberOfPair = [[[_scheduleDetailDictionary objectForKey:@"ImageConfig"] valueForKey:@"MinNumberOfPair"] intValue];
+        
+        if(_scheduleImagePairCounter < MinNumberOfPair)
+        {
+            NSString *message = [NSString stringWithFormat:@"Please complete the required photo pair (%d/%d)",_scheduleImagePairCounter,MinNumberOfPair];
+            
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"COMRESS" message:message delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+            
+            [alert show];
+        }
+    }
+    else if (scheduleImageStatus == 3)//required pair per checklist
+    {
+        if(_photoPairIsOk)
+        {
+            [self startJobWithStatus:3];
+        }
+        else
+        {
+
+            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"COMRESS" message:@"Please complete the required photo pair per checklist" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+            
+            [alert show];
+        }
+    }
 }
 
 @end

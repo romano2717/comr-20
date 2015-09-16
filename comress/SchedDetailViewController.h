@@ -17,11 +17,22 @@
 #import "SDWebImageManager.h"
 #import "ImageViewerViewController.h"
 #import "ActionSheetStringPicker.h"
+#import "ScheduleActionsViewController.h"
+#import "MBProgressHUD.h"
+#import "MZFormSheetController.h"
+#import "MZCustomTransition.h"
+#import "MZFormSheetSegue.h"
+
+#import "RoutineSynchronize.h"
+
+#import "PerformCheckListViewController.h"
 
 @interface SchedDetailViewController : VisibleFormViewController
 {
     Database *myDatabase;
     ImageOptions *imgOpts;
+    
+    RoutineSynchronize *routineSync;
 }
 @property (nonatomic, strong) NSDictionary *jobDetailDict;
 

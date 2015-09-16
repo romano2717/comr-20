@@ -47,8 +47,6 @@
 
 - (void)uploadUnlockBlockInfoFromSelf:(BOOL)fromSelf
 {
-    DDLogVerbose(@"uploadUnlockBlockInfoFromSelf");
-    
     NSMutableArray *unlockList = [[NSMutableArray alloc] init];
     
     NSNumber *needToSync = [NSNumber numberWithInt:1];
@@ -133,8 +131,6 @@
 
 - (void)uploadScheduleImageFromSelf:(BOOL)fromSelf
 {
-    DDLogVerbose(@"uploadScheduleImageFromSelf");
-    
     __block NSArray *scheduleImageList;
     
     [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -173,7 +169,7 @@
         if(fromSelf)
         {
             dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-                [self nextSyncMethod];
+                [self uploadScheduleUpdateFromSelf:fromSelf];
             });
         }
         
@@ -203,6 +199,189 @@
                         return;
                     }
                     
+                }];
+            }
+            
+        }
+        
+        if(fromSelf)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self uploadScheduleUpdateFromSelf:fromSelf];
+            });
+        }
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogVerbose(@"%@ [%@-%@]",error.localizedDescription,THIS_FILE,THIS_METHOD);
+        
+        if(fromSelf)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self uploadScheduleUpdateFromSelf:fromSelf];
+            });
+        }
+        
+    }];
+}
+
+
+- (void)uploadScheduleUpdateFromSelf:(BOOL)fromSelf
+{
+    NSMutableArray *scheduleList = [[NSMutableArray alloc] init];
+    NSNumber *needToSync = [NSNumber numberWithInt:2];
+    NSNumber *schedulePickedUp = [NSNumber numberWithInt:3];
+    NSNumber *syncFinished = [NSNumber numberWithInt:1];
+    
+    [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+    
+        FMResultSet *rs = [db executeQuery:@"select * from rt_schedule_detail where sync_flag = ?",needToSync];
+        while ([rs next]) {
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[rs intForColumn:@"schedule_id"]];
+            NSNumber *Status = [NSNumber numberWithInt:[rs intForColumn:@"status"]];
+            NSString *Remarks = [rs stringForColumn:@"remarks"];
+            
+            [scheduleList addObject:@{@"ScheduleId":ScheduleId,@"Status":Status,@"Remarks":Remarks}];
+            
+            
+            BOOL up2 = [db executeUpdate:@"update rt_schedule_detail set sync_flag = ? where schedule_id = ?",schedulePickedUp,ScheduleId];
+            
+            if(!up2)
+            {
+                *rollback = YES;
+                return;
+            }
+        }
+    }];
+    
+    if(scheduleList.count == 0)
+    {
+        if(fromSelf)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self uploadCheckListUpdateFromSelf:fromSelf];
+            });
+        }
+        
+        return;
+    }
+    
+    NSDictionary *params = @{@"scheduleList":scheduleList};
+    
+    [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url ,api_upload_update_sup_schedule] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSArray *AckScheduleImageObj = [responseObject objectForKey:@"AckScheduleObj"];
+        
+        for (NSDictionary *dict in AckScheduleImageObj) {
+            NSString *ErrorMessage = [dict valueForKey:@"ErrorMessage"];
+            BOOL IsSuccessful = [[dict valueForKey:@"IsSuccessful"] boolValue];
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[[dict valueForKey:@"ScheduleId"] intValue]];
+            
+            if([ErrorMessage isEqual:[NSNull null]] && IsSuccessful == YES)
+            {
+                [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                    
+                    //update schedule to finished sync
+                    BOOL up = [db executeUpdate:@"update rt_schedule_detail set sync_flag = ? where schedule_id = ?",syncFinished,ScheduleId];
+                    
+                    if(!up)
+                    {
+                        *rollback = YES;
+                        return;
+                    }
+                }];
+            }
+            
+        }
+        
+        if(fromSelf)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self uploadCheckListUpdateFromSelf:fromSelf];
+            });
+        }
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogVerbose(@"%@ [%@-%@]",error.localizedDescription,THIS_FILE,THIS_METHOD);
+        
+        if(fromSelf)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self uploadCheckListUpdateFromSelf:fromSelf];
+            });
+        }
+        
+    }];
+}
+
+
+- (void)uploadCheckListUpdateFromSelf:(BOOL)fromSelf
+{
+    NSMutableArray *selectedCheckList = [[NSMutableArray alloc] init];
+    
+    NSNumber *needToSync = [NSNumber numberWithInt:2];
+    NSNumber *schedulePickedUp = [NSNumber numberWithInt:3];
+    NSNumber *syncFinished = [NSNumber numberWithInt:1];
+    NSNumber *yesBool = [NSNumber numberWithBool:YES];
+    
+    [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        
+        //get the checklist to upload
+        FMResultSet *rs = [db executeQuery:@"select * from rt_checklist c left join rt_schedule_detail sd on c.schedule_id =  sd.schedule_id where sd.checklist_sync_flag = ? and c.is_checked = ?",needToSync,yesBool];
+        
+        while ([rs next]) {
+            NSNumber *CheckListId = [NSNumber numberWithInt:[rs intForColumn:@"checklist_id"]];
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[rs intForColumn:@"schedule_id"]];
+            NSNumber *IsCheck = [NSNumber numberWithBool:YES];
+            
+            [selectedCheckList addObject:@{@"CheckListId":CheckListId,@"ScheduleId":ScheduleId,@"IsCheck":IsCheck}];
+            
+            BOOL up = [db executeUpdate:@"update rt_schedule_detail set checklist_sync_flag = ? where schedule_id = ?",schedulePickedUp,ScheduleId];
+            
+            if(!up)
+            {
+                *rollback = YES;
+                return;
+            }
+        }
+    }];
+    
+    if(selectedCheckList.count == 0)
+    {
+        if(fromSelf)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self nextSyncMethod];
+            });
+        }
+        
+        return;
+    }
+    
+    NSDictionary *params = @{@"selectedCheckList":selectedCheckList};
+    
+    [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url ,api_upload_selected_checklist] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSArray *AckSUPCheckListObj = [responseObject objectForKey:@"AckSUPCheckListObj"];
+        
+        for (NSDictionary *dict in AckSUPCheckListObj) {
+
+            BOOL IsSuccessful = [[dict valueForKey:@"IsSuccessful"] boolValue];
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[[dict valueForKey:@"ScheduleId"] intValue]];
+            
+            if(IsSuccessful == YES)
+            {
+                [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                    
+                    //update schedule to finished sync
+                    BOOL up = [db executeUpdate:@"update rt_schedule_detail set checklist_sync_flag = ? where schedule_id = ?",syncFinished,ScheduleId];
+                    
+                    if(!up)
+                    {
+                        *rollback = YES;
+                        return;
+                    }
                 }];
             }
             

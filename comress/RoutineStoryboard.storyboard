@@ -225,6 +225,37 @@
             </objects>
             <point key="canvasLocation" x="4184" y="1600"/>
         </scene>
+        <!--Schedule Actions View Controller-->
+        <scene sceneID="53I-2X-Uev">
+            <objects>
+                <viewController storyboardIdentifier="ScheduleActionsViewController" id="XRA-h2-KCK" customClass="ScheduleActionsViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bIq-bK-AG4"/>
+                        <viewControllerLayoutGuide type="bottom" id="abH-eV-IfM"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="kfI-M9-Aig">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="cxV-S8-BD1">
+                                <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <connections>
+                                    <outlet property="dataSource" destination="XRA-h2-KCK" id="2ny-L5-Iz3"/>
+                                    <outlet property="delegate" destination="XRA-h2-KCK" id="VBO-fg-HKf"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                    </view>
+                    <connections>
+                        <outlet property="actionsTableView" destination="cxV-S8-BD1" id="Emq-49-CbW"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="v2h-un-B2i" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5565" y="1652"/>
+        </scene>
         <!--Jobs-->
         <scene sceneID="Dis-v1-Z0l">
             <objects>
@@ -373,7 +404,7 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RMd-Y9-hWW" customClass="BNRDynamicTypeManagedButton">
+                            <button hidden="YES" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="RMd-Y9-hWW" customClass="BNRDynamicTypeManagedButton">
                                 <rect key="frame" x="101" y="128" width="483" height="32"/>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <state key="normal">
@@ -501,7 +532,6 @@
                                 <constraints>
                                     <constraint firstAttribute="height" constant="94" id="owC-rh-e2G"/>
                                 </constraints>
-                                <string key="text">Lorem ipsum dolor sit er elit lamet, consectetaur cillium adipisicing pecu, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum. Nam liber te conscient to factor tum poen legum odioque civiuda.</string>
                                 <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
                                 <textInputTraits key="textInputTraits" autocapitalizationType="sentences"/>
                                 <connections>
@@ -513,6 +543,9 @@
                                 <state key="normal" title="OK">
                                     <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
                                 </state>
+                                <connections>
+                                    <action selector="okButtonTap:" destination="5j7-tR-kra" eventType="touchUpInside" id="gcS-AO-kcx"/>
+                                </connections>
                             </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
@@ -551,7 +584,11 @@
                     </view>
                     <navigationItem key="navigationItem" title="Job Description" id="BFm-1x-hiT">
                         <barButtonItem key="backBarButtonItem" title=" " id="1Uo-FW-iYP"/>
-                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="NaN-GU-NRd"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="action" id="NaN-GU-NRd">
+                            <connections>
+                                <action selector="scheduleActions:" destination="5j7-tR-kra" id="7IG-Hu-oKk"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
                         <outlet property="cameraButton" destination="RMd-Y9-hWW" id="0G3-79-7eP"/>
@@ -562,6 +599,8 @@
                         <outlet property="statusLabel" destination="ebF-OL-7xr" id="MGD-qb-Xhx"/>
                         <segue destination="te9-9S-o4x" kind="show" identifier="push_image_preview_caption" id="mbF-eD-3nl"/>
                         <segue destination="sbv-Yr-IyJ" kind="show" identifier="push_image_viewer" id="sgS-vr-548"/>
+                        <segue destination="XRA-h2-KCK" kind="presentation" id="1mZ-PX-2GF"/>
+                        <segue destination="hPB-ou-4c6" kind="presentation" id="FuA-yZ-VVR"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="CYO-rS-tBh" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -671,6 +710,150 @@
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BIq-pG-dSP" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="5814" y="2487"/>
+        </scene>
+        <!--Perform Check List View Controller-->
+        <scene sceneID="6vO-E9-oU2">
+            <objects>
+                <viewController storyboardIdentifier="PerformCheckListViewController" id="hPB-ou-4c6" customClass="PerformCheckListViewController" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="iFs-KS-WCB"/>
+                        <viewControllerLayoutGuide type="bottom" id="xhx-T2-XyH"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="duF-tX-fCR">
+                        <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="PXG-KA-9PG">
+                                <rect key="frame" x="16" y="20" width="72" height="30"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="72" id="wUV-hE-kGW"/>
+                                </constraints>
+                                <state key="normal" title="Cancel">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="cancel:" destination="hPB-ou-4c6" eventType="touchUpInside" id="7Y4-iq-Fee"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KrW-ew-VeV">
+                                <rect key="frame" x="512" y="20" width="72" height="30"/>
+                                <state key="normal" title="Save">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <connections>
+                                    <action selector="save:" destination="hPB-ou-4c6" eventType="touchUpInside" id="Oya-fu-IQB"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Checklist" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6U3-8b-z1R">
+                                <rect key="frame" x="96" y="20" width="408" height="30"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleHeadline"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="64" sectionHeaderHeight="22" sectionFooterHeight="22" translatesAutoresizingMaskIntoConstraints="NO" id="CG5-EA-zWD">
+                                <rect key="frame" x="0.0" y="58" width="600" height="484"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                <prototypes>
+                                    <tableViewCell contentMode="scaleToFill" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="cell" id="rhQ-ng-0pz" customClass="CheckListCustomCell">
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="rhQ-ng-0pz" id="IMl-1l-UlX">
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6VY-Y7-C4n">
+                                                    <rect key="frame" x="58" y="21" width="534" height="21"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fJd-2x-iMD">
+                                                    <rect key="frame" x="8" y="11" width="42" height="42"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="42" id="MVB-ry-ecr"/>
+                                                    </constraints>
+                                                    <state key="normal" image="check.png">
+                                                        <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                                    </state>
+                                                    <state key="selected" image="checked.png"/>
+                                                    <state key="highlighted" image="checked.png"/>
+                                                    <connections>
+                                                        <action selector="toggleCheckList:" destination="hPB-ou-4c6" eventType="touchUpInside" id="fFm-71-rhZ"/>
+                                                    </connections>
+                                                </button>
+                                            </subviews>
+                                            <constraints>
+                                                <constraint firstItem="fJd-2x-iMD" firstAttribute="leading" secondItem="IMl-1l-UlX" secondAttribute="leadingMargin" id="BfS-4W-O7r"/>
+                                                <constraint firstItem="6VY-Y7-C4n" firstAttribute="leading" secondItem="fJd-2x-iMD" secondAttribute="trailing" constant="8" symbolic="YES" id="Gfu-Jb-1GG"/>
+                                                <constraint firstAttribute="trailingMargin" secondItem="6VY-Y7-C4n" secondAttribute="trailing" id="bwl-Ck-VY6"/>
+                                                <constraint firstItem="6VY-Y7-C4n" firstAttribute="centerY" secondItem="IMl-1l-UlX" secondAttribute="centerY" id="kJR-AU-QH7"/>
+                                                <constraint firstItem="fJd-2x-iMD" firstAttribute="top" secondItem="IMl-1l-UlX" secondAttribute="topMargin" constant="3" id="vCW-Gg-FMk"/>
+                                                <constraint firstItem="6VY-Y7-C4n" firstAttribute="top" secondItem="IMl-1l-UlX" secondAttribute="topMargin" constant="13" id="wn7-sg-UeA"/>
+                                                <constraint firstAttribute="bottomMargin" secondItem="fJd-2x-iMD" secondAttribute="bottom" constant="2.5" id="z3h-4d-2an"/>
+                                            </constraints>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="checkBoxBtn" destination="fJd-2x-iMD" id="8VJ-TB-08I"/>
+                                            <outlet property="checkListLabel" destination="6VY-Y7-C4n" id="iD9-yt-FDE"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <connections>
+                                    <outlet property="dataSource" destination="hPB-ou-4c6" id="hiS-Vr-Pma"/>
+                                    <outlet property="delegate" destination="hPB-ou-4c6" id="DMJ-Nd-lvt"/>
+                                </connections>
+                            </tableView>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="tlH-Ft-eRj">
+                                <rect key="frame" x="16" y="550" width="42" height="42"/>
+                                <constraints>
+                                    <constraint firstAttribute="width" constant="42" id="Ure-Pb-Cla"/>
+                                </constraints>
+                                <state key="normal" image="check.png">
+                                    <color key="titleShadowColor" white="0.5" alpha="1" colorSpace="calibratedWhite"/>
+                                </state>
+                                <state key="selected" image="checked.png"/>
+                                <state key="highlighted" image="checked.png"/>
+                                <connections>
+                                    <action selector="checkAll:" destination="hPB-ou-4c6" eventType="touchUpInside" id="90b-cJ-W9S"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Check All" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="XIh-YL-u69">
+                                <rect key="frame" x="66" y="560" width="518" height="21"/>
+                                <fontDescription key="fontDescription" style="UICTFontTextStyleBody"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="tlH-Ft-eRj" firstAttribute="top" secondItem="CG5-EA-zWD" secondAttribute="bottom" constant="8" symbolic="YES" id="5O1-3Q-aoM"/>
+                            <constraint firstItem="CG5-EA-zWD" firstAttribute="centerX" secondItem="6U3-8b-z1R" secondAttribute="centerX" id="AFo-eU-QR5"/>
+                            <constraint firstItem="6U3-8b-z1R" firstAttribute="top" secondItem="PXG-KA-9PG" secondAttribute="top" id="B2t-0u-Bn5"/>
+                            <constraint firstItem="CG5-EA-zWD" firstAttribute="centerY" secondItem="duF-tX-fCR" secondAttribute="centerY" id="E3K-33-MZl"/>
+                            <constraint firstItem="KrW-ew-VeV" firstAttribute="trailing" secondItem="duF-tX-fCR" secondAttribute="trailingMargin" id="Es3-ZL-JUR"/>
+                            <constraint firstItem="PXG-KA-9PG" firstAttribute="leading" secondItem="tlH-Ft-eRj" secondAttribute="leading" id="La5-a8-H5B"/>
+                            <constraint firstItem="6U3-8b-z1R" firstAttribute="leading" secondItem="PXG-KA-9PG" secondAttribute="trailing" constant="8" symbolic="YES" id="Nd4-NA-S5r"/>
+                            <constraint firstItem="XIh-YL-u69" firstAttribute="leading" secondItem="tlH-Ft-eRj" secondAttribute="trailing" constant="8" symbolic="YES" id="O4k-Vq-UUj"/>
+                            <constraint firstItem="tlH-Ft-eRj" firstAttribute="leading" secondItem="duF-tX-fCR" secondAttribute="leadingMargin" id="P0t-4c-7zk"/>
+                            <constraint firstItem="PXG-KA-9PG" firstAttribute="top" secondItem="iFs-KS-WCB" secondAttribute="bottom" id="R5V-pE-2kf"/>
+                            <constraint firstAttribute="trailing" secondItem="CG5-EA-zWD" secondAttribute="trailing" id="Xys-Nj-g9Q"/>
+                            <constraint firstItem="xhx-T2-XyH" firstAttribute="top" secondItem="XIh-YL-u69" secondAttribute="bottom" constant="19" id="afB-rp-bJg"/>
+                            <constraint firstItem="KrW-ew-VeV" firstAttribute="baseline" secondItem="PXG-KA-9PG" secondAttribute="baseline" id="bUh-1r-Mww"/>
+                            <constraint firstItem="CG5-EA-zWD" firstAttribute="top" secondItem="PXG-KA-9PG" secondAttribute="bottom" constant="8" symbolic="YES" id="j7y-qV-vsD"/>
+                            <constraint firstItem="KrW-ew-VeV" firstAttribute="trailing" secondItem="XIh-YL-u69" secondAttribute="trailing" id="lSh-vg-W9a"/>
+                            <constraint firstItem="xhx-T2-XyH" firstAttribute="top" secondItem="tlH-Ft-eRj" secondAttribute="bottom" constant="8" symbolic="YES" id="mUG-mD-2a3"/>
+                            <constraint firstItem="CG5-EA-zWD" firstAttribute="leading" secondItem="duF-tX-fCR" secondAttribute="leading" id="sdy-1g-emX"/>
+                            <constraint firstItem="KrW-ew-VeV" firstAttribute="leading" secondItem="6U3-8b-z1R" secondAttribute="trailing" constant="8" symbolic="YES" id="swX-sk-jq9"/>
+                            <constraint firstItem="CG5-EA-zWD" firstAttribute="top" secondItem="6U3-8b-z1R" secondAttribute="bottom" constant="8" symbolic="YES" id="v1h-h6-qd0"/>
+                            <constraint firstItem="XIh-YL-u69" firstAttribute="top" secondItem="CG5-EA-zWD" secondAttribute="bottom" constant="18" id="xLF-qw-GEr"/>
+                        </constraints>
+                    </view>
+                    <connections>
+                        <outlet property="checkAllBtn" destination="tlH-Ft-eRj" id="qDa-4I-dAG"/>
+                        <outlet property="checkListTableView" destination="CG5-EA-zWD" id="PKU-Zn-e6W"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="fBz-3L-eCx" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="5561" y="3273"/>
         </scene>
         <!--Photo Caption-->
         <scene sceneID="chi-Cp-n9u">
@@ -795,6 +978,8 @@
     </scenes>
     <resources>
         <image name="arrow.png" width="32" height="32"/>
+        <image name="check.png" width="22" height="22"/>
+        <image name="checked.png" width="23" height="22"/>
         <image name="locked.png" width="20" height="20"/>
         <image name="noImage.png" width="128" height="128"/>
         <image name="noImage2.png" width="64" height="64"/>

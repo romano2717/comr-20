@@ -72,6 +72,10 @@ static NSString *api_get_schedule_detail_by_sup = @"Job/Schedule.svc/GetSchedule
 
 static NSString *api_upload_schedule_image = @"Job/Schedule.svc/UploadScheduleImageWithBase64";
 
+static NSString *api_upload_update_sup_schedule = @"Job/Schedule.svc/UpdateSUPSchedules";
+
+static NSString *api_upload_selected_checklist = @"Job/Schedule.svc/UploadSelectedCheckLists";
+
 
 //feedback
 
