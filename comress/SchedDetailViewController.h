@@ -22,9 +22,8 @@
 #import "MZFormSheetController.h"
 #import "MZCustomTransition.h"
 #import "MZFormSheetSegue.h"
-
+#import "AGPushNoteView.h"
 #import "RoutineSynchronize.h"
-
 #import "PerformCheckListViewController.h"
 
 @interface SchedDetailViewController : VisibleFormViewController

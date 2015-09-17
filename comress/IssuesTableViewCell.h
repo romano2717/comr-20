@@ -20,6 +20,7 @@
 }
 @property (nonatomic, weak) IBOutlet UIImageView *mainImageView;
 @property (nonatomic, weak) IBOutlet UIImageView *pinImageView;
+@property (nonatomic, weak) IBOutlet UIImageView *aNewPostImageView;
 @property (nonatomic, weak) IBOutlet BadgeLabel *commentsCount;
 @property (nonatomic, weak) IBOutlet UILabel *statusLabel;
 @property (nonatomic, weak) IBOutlet UIProgressView *statusProgressView;

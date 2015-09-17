@@ -898,13 +898,19 @@
             NSDate *LastUpdatedDate = [myDatabase createNSDateWithWcfDateString:[dictPost valueForKey:@"LastUpdatedDate"]];
             NSNumber *contractType = [dictPost valueForKey:@"PostGroup"];
             NSNumber *RelatedPostId = [NSNumber numberWithInt:[[dictPost valueForKey:@"RelatedPostId"] intValue]];
-
+            NSNumber *IsNew = [NSNumber numberWithBool:[[dictPost valueForKey:@"IsNew"] boolValue]];
+            
+            if([IsNew boolValue] == YES)
+                IsNew = [NSNumber numberWithBool:NO];
+            else
+                IsNew = [NSNumber numberWithBool:YES];
+            
             [myDatabase.databaseQ inTransaction:^(FMDatabase *theDb, BOOL *rollback) {
                 
                 FMResultSet *rsPostCheck = [theDb executeQuery:@"select * from post where post_id = ?",PostId];
                 if([rsPostCheck next] == NO)
                 {
-                    BOOL qIns = [theDb executeUpdate:@"insert into post (status, block_id, level, address, post_by, post_id, post_topic, post_type, postal_code, severity, post_date, updated_on, contract_type, dueDate, relatedPostId, seen) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",ActionStatus, BlkId, Level, Location, PostBy, PostId, PostTopic, PostType, PostalCode, Severity, PostDate, LastUpdatedDate, contractType, DueDate, RelatedPostId,[NSNumber numberWithBool:YES]];
+                    BOOL qIns = [theDb executeUpdate:@"insert into post (status, block_id, level, address, post_by, post_id, post_topic, post_type, postal_code, severity, post_date, updated_on, contract_type, dueDate, relatedPostId, seen) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",ActionStatus, BlkId, Level, Location, PostBy, PostId, PostTopic, PostType, PostalCode, Severity, PostDate, LastUpdatedDate, contractType, DueDate, RelatedPostId,IsNew];
                     
                     if(!qIns)
                     {
@@ -914,7 +920,7 @@
                 }
                 else
                 {
-                    BOOL ups = [theDb executeUpdate:@"update post set status = ?, block_id = ?, level = ?, address = ?, post_by = ?, post_topic = ?, post_type = ?, postal_code = ?, severity = ?, post_date = ?, contract_type = ?, dueDate = ?, updated_on = ?, seen = ?, relatedPostId = ? where post_id = ?",ActionStatus,BlkId,Level,Location,PostBy,PostTopic,PostType,PostalCode,Severity,PostDate,contractType,DueDate,LastUpdatedDate, [NSNumber numberWithBool:YES], RelatedPostId, PostId];
+                    BOOL ups = [theDb executeUpdate:@"update post set status = ?, block_id = ?, level = ?, address = ?, post_by = ?, post_topic = ?, post_type = ?, postal_code = ?, severity = ?, post_date = ?, contract_type = ?, dueDate = ?, updated_on = ?, seen = ?, relatedPostId = ? where post_id = ?",ActionStatus,BlkId,Level,Location,PostBy,PostTopic,PostType,PostalCode,Severity,PostDate,contractType,DueDate,LastUpdatedDate, IsNew, RelatedPostId, PostId];
                     
                     if(!ups)
                     {

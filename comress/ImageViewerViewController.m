@@ -7,10 +7,14 @@
 //
 
 #import "ImageViewerViewController.h"
+#import "ResponsiveLabel.h"
+
+static NSString *kExpansionToken = @"...Read More";
+static NSString *kCollapseToken = @" Read Less";
 
 @interface ImageViewerViewController ()
 @property (nonatomic, weak) IBOutlet UILabel *imageTypelabel;
-@property (nonatomic, weak) IBOutlet UILabel *remarksLabel;
+@property (nonatomic, weak) IBOutlet ResponsiveLabel *remarksLabel;
 @property (nonatomic, weak) IBOutlet UILabel *imageCounterLabel;
 @property (nonatomic, weak) IBOutlet UIImageView *imageView;
 
@@ -90,6 +94,16 @@
     _imageView.image = [[_imagesArray firstObject] objectForKey:@"image"];
     _remarksLabel.text = [[_imagesArray firstObject] objectForKey:@"remarks"];
     _imageTypelabel.text = [[_imagesArray firstObject] objectForKey:@"imageType"];
+    
+    
+    NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
+    [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:_remarksLabel.font}
+                          range:NSMakeRange(3, kExpansionToken.length - 3)];
+    [_remarksLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
+        [self expandRemarksText];
+    }];
+    
+    [self configureText:[[_imagesArray firstObject] objectForKey:@"remarks"] forExpandedState:NO];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -135,6 +149,15 @@
         _remarksLabel.text = [[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"remarks"];
         _imageCounterLabel.text = [NSString stringWithFormat:@"%d/%d image",_currentImageIndexCounter,(int)_imagesArray.count];
         _imageTypelabel.text = [[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"imageType"];
+        
+        NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
+        [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:_remarksLabel.font}
+                              range:NSMakeRange(3, kExpansionToken.length - 3)];
+        [_remarksLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
+            [self expandRemarksText];
+        }];
+        
+        [self configureText:[[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"remarks"] forExpandedState:NO];
     }
 }
 
@@ -154,8 +177,54 @@
         _imageView.image = [[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"image"];
         _remarksLabel.text = [[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"remarks"];
         _imageCounterLabel.text = [NSString stringWithFormat:@"%d/%d image",_currentImageIndexCounter,(int)_imagesArray.count];
-        _imageTypelabel.text = [[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"imageType"];        
+        _imageTypelabel.text = [[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"imageType"];
+        
+        NSMutableAttributedString *attribString = [[NSMutableAttributedString alloc]initWithString:kExpansionToken];
+        [attribString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],NSFontAttributeName:_remarksLabel.font}
+                              range:NSMakeRange(3, kExpansionToken.length - 3)];
+        [_remarksLabel setAttributedTruncationToken:attribString withAction:^(NSString *tappedString) {
+            [self expandRemarksText];
+        }];
+        
+        [self configureText:[[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"remarks"] forExpandedState:NO];
     }
+}
+
+- (void)configureText:(NSString*)str forExpandedState:(BOOL)isExpanded {
+    NSMutableAttributedString *finalString;
+    if (isExpanded) {
+        NSString *expandedString = [NSString stringWithFormat:@"%@%@",str,kCollapseToken];
+        finalString = [[NSMutableAttributedString alloc]initWithString:expandedString attributes:@{NSForegroundColorAttributeName:[UIColor whiteColor]}];
+        
+        PatternTapResponder tap = ^(NSString *string) {
+            [self collapseRemarksText];
+        };
+        [finalString addAttributes:@{NSForegroundColorAttributeName:[UIColor blueColor],RLTapResponderAttributeName:tap}
+                             range:[expandedString rangeOfString:kCollapseToken]];
+        [finalString addAttributes:@{NSFontAttributeName:_remarksLabel.font} range:NSMakeRange(0, finalString.length)];
+        _remarksLabel.numberOfLines = 0;
+        [_remarksLabel setAttributedText:finalString withTruncation:NO];
+        
+        _remarksLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.8f];
+
+    }else {
+        _remarksLabel.numberOfLines = 3;
+        [_remarksLabel setText:str withTruncation:YES];
+        _remarksLabel.textColor = [UIColor blackColor];
+        
+        _remarksLabel.backgroundColor = [[UIColor blackColor] colorWithAlphaComponent:0.0f];
+
+    }
+}
+
+- (void)expandRemarksText
+{
+    [self configureText:[[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"remarks"] forExpandedState:YES];
+}
+
+- (void)collapseRemarksText
+{
+    [self configureText:[[_imagesArray objectAtIndex:_currentImageIndex] objectForKey:@"remarks"] forExpandedState:NO];
 }
 
 @end

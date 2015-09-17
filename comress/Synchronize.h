@@ -66,6 +66,8 @@
 
 - (void)uploadReassignPostFromSelf:(BOOL)thisSelf;
 
+- (void)updatePostAsSeenForPostId:(NSNumber *)postId;
+
 //download
 
 - (void)startDownloadPostForPage:(int)page totalPage:(int)totPage requestDate:(NSDate *)reqDate;

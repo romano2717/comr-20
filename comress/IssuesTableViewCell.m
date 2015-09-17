@@ -10,7 +10,7 @@
 
 @implementation IssuesTableViewCell
 
-@synthesize mainImageView,statusLabel,statusProgressView,postTitleLabel,addressLabel,lastMessagByLabel,lastMessageLabel,dateLabel,messageCountLabel,pinImageView,commentsCount;
+@synthesize mainImageView,statusLabel,statusProgressView,postTitleLabel,addressLabel,lastMessagByLabel,lastMessageLabel,dateLabel,messageCountLabel,pinImageView,commentsCount,aNewPostImageView;
 
 @synthesize actionListArray,actionListValArray;
 
@@ -202,6 +202,9 @@
                 lastMessageLabel.textColor = [UIColor colorWithRed:102.0/255.0 green:102.0/255.0 blue:102/255.0 alpha:1.0f];
             }
         }
+        
+        aNewPostImageView.hidden = YES;
+        aNewPostImageView.hidden = [[postDict valueForKey:@"seen"] boolValue];
     }
     @catch (NSException *exception) {
         DDLogVerbose(@"ek ek ek %@",exception);

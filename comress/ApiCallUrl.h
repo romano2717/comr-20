@@ -60,6 +60,8 @@ static NSString *api_download_public_contract_types = @"PublicSetup.svc/GetContr
 
 static NSString *api_upload_reassign_posts = @"Messaging/Post.svc/UploadReAssignPost";
 
+static NSString *api_update_post_as_seen = @"Messaging/Post.svc/UpdatePostAfterRead";
+
 
 //routine
 static NSString *api_download_block_schedule = @"Job/ScheduledBlock.svc/GetScheduledBlock";

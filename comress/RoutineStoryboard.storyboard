@@ -674,12 +674,23 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ro1-5r-jMm" customClass="ResponsiveLabel">
+                                <rect key="frame" x="0.0" y="488" width="600" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="boolean" keyPath="customTruncationEnabled" value="YES"/>
+                                </userDefinedRuntimeAttributes>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="Zjg-pW-0II" firstAttribute="leading" secondItem="sOk-gR-JBu" secondAttribute="trailing" constant="-9" id="2lh-2q-2jH"/>
+                            <constraint firstItem="9as-gg-8xl" firstAttribute="top" secondItem="ro1-5r-jMm" secondAttribute="bottom" constant="8" symbolic="YES" id="3yu-DE-frf"/>
                             <constraint firstItem="9as-gg-8xl" firstAttribute="leading" secondItem="GnK-sS-cc1" secondAttribute="leading" id="4xf-Ci-99z"/>
                             <constraint firstItem="sOk-gR-JBu" firstAttribute="centerX" secondItem="GnK-sS-cc1" secondAttribute="centerX" id="8Ax-Wb-NOF"/>
+                            <constraint firstItem="ro1-5r-jMm" firstAttribute="leading" secondItem="6ep-h6-eZF" secondAttribute="leading" constant="-16" id="99c-8O-L7j"/>
                             <constraint firstItem="6ep-h6-eZF" firstAttribute="top" secondItem="l4h-eP-xSh" secondAttribute="bottom" constant="8" symbolic="YES" id="AJb-Fk-Hzb"/>
                             <constraint firstItem="GnK-sS-cc1" firstAttribute="bottom" secondItem="KI4-7Y-Wxy" secondAttribute="top" constant="-91" id="Bdb-dP-X9e"/>
                             <constraint firstItem="9as-gg-8xl" firstAttribute="baseline" secondItem="sOk-gR-JBu" secondAttribute="firstBaseline" constant="-16.5" id="Cso-LV-aUI">
@@ -688,6 +699,7 @@
                             </constraint>
                             <constraint firstItem="GnK-sS-cc1" firstAttribute="leading" secondItem="SVD-em-tcX" secondAttribute="leading" id="GRv-Ap-0gi"/>
                             <constraint firstItem="9as-gg-8xl" firstAttribute="baseline" secondItem="Zjg-pW-0II" secondAttribute="baseline" id="H51-4r-nff"/>
+                            <constraint firstItem="ro1-5r-jMm" firstAttribute="centerX" secondItem="sOk-gR-JBu" secondAttribute="centerX" id="KBw-1W-aae"/>
                             <constraint firstItem="6ep-h6-eZF" firstAttribute="leading" secondItem="SVD-em-tcX" secondAttribute="leadingMargin" id="MLc-7Z-Hdq"/>
                             <constraint firstItem="sOk-gR-JBu" firstAttribute="leading" secondItem="9as-gg-8xl" secondAttribute="trailing" constant="-9" id="R3R-09-bVk"/>
                             <constraint firstItem="GnK-sS-cc1" firstAttribute="top" secondItem="6ep-h6-eZF" secondAttribute="top" id="TKt-Wg-ybY"/>
@@ -705,6 +717,7 @@
                         <outlet property="imageCounterLabel" destination="sOk-gR-JBu" id="Mec-JQ-hSo"/>
                         <outlet property="imageTypelabel" destination="6ep-h6-eZF" id="zXj-QB-r8V"/>
                         <outlet property="imageView" destination="GnK-sS-cc1" id="HfT-BV-eEP"/>
+                        <outlet property="remarksLabel" destination="ro1-5r-jMm" id="AEG-XR-d0g"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="BIq-pG-dSP" userLabel="First Responder" sceneMemberID="firstResponder"/>

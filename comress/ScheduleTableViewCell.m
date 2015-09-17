@@ -54,9 +54,18 @@
     
 
     NSString *Title = [imageTemplate valueForKey:@"Title"];
+    NSString *numOfBeforeImages = nil;
+    NSString *numOfAfterImages = nil;
     
-    NSString *numOfBeforeImages = [NSString stringWithFormat:@"Before (%@/%@)",[imageTemplate valueForKey:@"beforeImagesPair"],[imageTemplate valueForKey:@"MinNoOfImage"]];
-    NSString *numOfAfterImages = [NSString stringWithFormat:@"After (%@/%@)",[imageTemplate valueForKey:@"afterImagesPair"],[imageTemplate valueForKey:@"MinNoOfImage"]];
+    if([[imageTemplate valueForKey:@"MinNoOfImage"] intValue] > 0)
+        numOfBeforeImages = [NSString stringWithFormat:@"Before (%@/%@)",[imageTemplate valueForKey:@"beforeImagesPair"],[imageTemplate valueForKey:@"MinNoOfImage"]];
+    else
+        numOfBeforeImages = @"Before";
+    
+    if([[imageTemplate valueForKey:@"MinNoOfImage"] intValue] > 0)
+        numOfAfterImages = [NSString stringWithFormat:@"After (%@/%@)",[imageTemplate valueForKey:@"afterImagesPair"],[imageTemplate valueForKey:@"MinNoOfImage"]];
+    else
+        numOfAfterImages = @"After";
 
     NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
     NSString *documentsPath = [paths objectAtIndex:0];

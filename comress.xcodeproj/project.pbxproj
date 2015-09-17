@@ -90,6 +90,14 @@
 		4D4108181B2A7CE000D4DA65 /* SurveyListPerPoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D4108171B2A7CE000D4DA65 /* SurveyListPerPoViewController.m */; };
 		4D4CB52A1A89D76F008AFD00 /* IssuesChatViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D4CB5291A89D76F008AFD00 /* IssuesChatViewController.m */; };
 		4D4CB52D1A89D7DA008AFD00 /* MessageData.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D4CB52C1A89D7DA008AFD00 /* MessageData.m */; };
+		4D5F11DD1BAA671D005AE689 /* AGPushNoteView.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F11DB1BAA671D005AE689 /* AGPushNoteView.m */; };
+		4D5F11DE1BAA671D005AE689 /* AGPushNoteView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 4D5F11DC1BAA671D005AE689 /* AGPushNoteView.xib */; };
+		4D5F11E01BAA688F005AE689 /* notiLogo.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5F11DF1BAA688F005AE689 /* notiLogo.png */; };
+		4D5F11F11BAA7145005AE689 /* NSAttributedString+Processing.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F11EA1BAA7145005AE689 /* NSAttributedString+Processing.m */; };
+		4D5F11F21BAA7145005AE689 /* ResponsiveLabel.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F11EC1BAA7145005AE689 /* ResponsiveLabel.m */; };
+		4D5F11F31BAA7145005AE689 /* PatternDescriptor.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F11EE1BAA7145005AE689 /* PatternDescriptor.m */; };
+		4D5F11F41BAA7145005AE689 /* InlineTextAttachment.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D5F11F01BAA7145005AE689 /* InlineTextAttachment.m */; };
+		4D5F11F61BAAC403005AE689 /* newImgIcn@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D5F11F51BAAC403005AE689 /* newImgIcn@2x.png */; };
 		4D6424BE1AD3B4B900B6B974 /* ResidentPopInfoViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 4D6424BD1AD3B4B900B6B974 /* ResidentPopInfoViewController.m */; };
 		4D6424C91AD3CF3800B6B974 /* industry@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D6424C51AD3CF3800B6B974 /* industry@2x.png */; };
 		4D6424CA1AD3CF3800B6B974 /* mosquito@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 4D6424C61AD3CF3800B6B974 /* mosquito@2x.png */; };
@@ -473,6 +481,19 @@
 		4D4CB5291A89D76F008AFD00 /* IssuesChatViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IssuesChatViewController.m; sourceTree = "<group>"; };
 		4D4CB52B1A89D7DA008AFD00 /* MessageData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MessageData.h; sourceTree = "<group>"; };
 		4D4CB52C1A89D7DA008AFD00 /* MessageData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MessageData.m; sourceTree = "<group>"; };
+		4D5F11DA1BAA671D005AE689 /* AGPushNoteView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AGPushNoteView.h; sourceTree = "<group>"; };
+		4D5F11DB1BAA671D005AE689 /* AGPushNoteView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AGPushNoteView.m; sourceTree = "<group>"; };
+		4D5F11DC1BAA671D005AE689 /* AGPushNoteView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = AGPushNoteView.xib; sourceTree = "<group>"; };
+		4D5F11DF1BAA688F005AE689 /* notiLogo.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = notiLogo.png; sourceTree = "<group>"; };
+		4D5F11E91BAA7145005AE689 /* NSAttributedString+Processing.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSAttributedString+Processing.h"; sourceTree = "<group>"; };
+		4D5F11EA1BAA7145005AE689 /* NSAttributedString+Processing.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSAttributedString+Processing.m"; sourceTree = "<group>"; };
+		4D5F11EB1BAA7145005AE689 /* ResponsiveLabel.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResponsiveLabel.h; sourceTree = "<group>"; };
+		4D5F11EC1BAA7145005AE689 /* ResponsiveLabel.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResponsiveLabel.m; sourceTree = "<group>"; };
+		4D5F11ED1BAA7145005AE689 /* PatternDescriptor.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatternDescriptor.h; sourceTree = "<group>"; };
+		4D5F11EE1BAA7145005AE689 /* PatternDescriptor.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatternDescriptor.m; sourceTree = "<group>"; };
+		4D5F11EF1BAA7145005AE689 /* InlineTextAttachment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InlineTextAttachment.h; sourceTree = "<group>"; };
+		4D5F11F01BAA7145005AE689 /* InlineTextAttachment.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InlineTextAttachment.m; sourceTree = "<group>"; };
+		4D5F11F51BAAC403005AE689 /* newImgIcn@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "newImgIcn@2x.png"; sourceTree = "<group>"; };
 		4D6424BC1AD3B4B900B6B974 /* ResidentPopInfoViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResidentPopInfoViewController.h; sourceTree = "<group>"; };
 		4D6424BD1AD3B4B900B6B974 /* ResidentPopInfoViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ResidentPopInfoViewController.m; sourceTree = "<group>"; };
 		4D6424C51AD3CF3800B6B974 /* industry@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "industry@2x.png"; sourceTree = "<group>"; };
@@ -1211,6 +1232,31 @@
 			name = Chat;
 			sourceTree = "<group>";
 		};
+		4D5F11D91BAA670E005AE689 /* Notification */ = {
+			isa = PBXGroup;
+			children = (
+				4D5F11DA1BAA671D005AE689 /* AGPushNoteView.h */,
+				4D5F11DB1BAA671D005AE689 /* AGPushNoteView.m */,
+				4D5F11DC1BAA671D005AE689 /* AGPushNoteView.xib */,
+			);
+			name = Notification;
+			sourceTree = "<group>";
+		};
+		4D5F11E51BAA6FF3005AE689 /* Responsive label */ = {
+			isa = PBXGroup;
+			children = (
+				4D5F11E91BAA7145005AE689 /* NSAttributedString+Processing.h */,
+				4D5F11EA1BAA7145005AE689 /* NSAttributedString+Processing.m */,
+				4D5F11EB1BAA7145005AE689 /* ResponsiveLabel.h */,
+				4D5F11EC1BAA7145005AE689 /* ResponsiveLabel.m */,
+				4D5F11ED1BAA7145005AE689 /* PatternDescriptor.h */,
+				4D5F11EE1BAA7145005AE689 /* PatternDescriptor.m */,
+				4D5F11EF1BAA7145005AE689 /* InlineTextAttachment.h */,
+				4D5F11F01BAA7145005AE689 /* InlineTextAttachment.m */,
+			);
+			name = "Responsive label";
+			sourceTree = "<group>";
+		};
 		4D6856191B005767008D2A74 /* PO-Close Action */ = {
 			isa = PBXGroup;
 			children = (
@@ -1457,6 +1503,8 @@
 		4DA203EA1A79CC2B00C7E5C7 /* Libs */ = {
 			isa = PBXGroup;
 			children = (
+				4D5F11E51BAA6FF3005AE689 /* Responsive label */,
+				4D5F11D91BAA670E005AE689 /* Notification */,
 				4DF6B7461BA0245D0053EEF7 /* keyboard avoid */,
 				4DCBBD6B1B8D8FE60042CDC9 /* crashlytics */,
 				4DCBBD5B1B8C45C70042CDC9 /* dynamic types */,
@@ -1542,6 +1590,8 @@
 		4DA2041A1A79CF7400C7E5C7 /* images */ = {
 			isa = PBXGroup;
 			children = (
+				4D5F11F51BAAC403005AE689 /* newImgIcn@2x.png */,
+				4D5F11DF1BAA688F005AE689 /* notiLogo.png */,
 				4DD546241B9E8A6C00543B81 /* cam@2x.png */,
 				4D3A319D1B8713C900144067 /* arrow_open.png */,
 				4D3A319E1B8713C900144067 /* arrow_close.png */,
@@ -2364,6 +2414,7 @@
 				4D1FCE1B1ADB9D18005381FA /* user@2x.png in Resources */,
 				4D6856491B035887008D2A74 /* humans.txt in Resources */,
 				4D1265CA1AE2C7AF00D9A512 /* 1_03@2x.png in Resources */,
+				4D5F11F61BAAC403005AE689 /* newImgIcn@2x.png in Resources */,
 				4D8AC95A1AAD8AB3008F7652 /* settings.png in Resources */,
 				4DA7E48B1ACEF5F400C994E3 /* hi@2x.png in Resources */,
 				4D1265CE1AE2C83400D9A512 /* 1_13@2x.png in Resources */,
@@ -2372,6 +2423,7 @@
 				4D337D4F1ACBFFB200F9C7AA /* poor@2x.png in Resources */,
 				4DD546291B9E8A9100543B81 /* unlocked@2x.png in Resources */,
 				4D91D6041A91CA3C00A21DBA /* pin.png in Resources */,
+				4D5F11E01BAA688F005AE689 /* notiLogo.png in Resources */,
 				4D337D4E1ACBFFB200F9C7AA /* good@2x.png in Resources */,
 				4D6856311B0322A8008D2A74 /* stats_sel@2x.png in Resources */,
 				4D6856461B035887008D2A74 /* crossdomain.xml in Resources */,
@@ -2411,6 +2463,7 @@
 				4D85E6B01AD7930100170D66 /* threeOfThreeStars@2x.png in Resources */,
 				4D6424CB1AD3CF3800B6B974 /* tree@2x.png in Resources */,
 				4DA207FF1A79DA0A00C7E5C7 /* JSQMessagesLoadEarlierHeaderView.xib in Resources */,
+				4D5F11DE1BAA671D005AE689 /* AGPushNoteView.xib in Resources */,
 				4D8AC96A1AAD8CD4008F7652 /* settings@2x.png in Resources */,
 				4D36D4451B183B7700773F94 /* jointlogo.png in Resources */,
 				4DA207FA1A79DA0A00C7E5C7 /* JSQMessagesCollectionViewCellOutgoing.xib in Resources */,
@@ -2507,6 +2560,7 @@
 				4D26F4B91AE72FDA00992319 /* MZFormSheetBackgroundWindow.m in Sources */,
 				4D2605001ADE367C00C8E140 /* Feedback.m in Sources */,
 				4DD6FEA81A884CFF00CBBE1D /* UIImage+GIF.m in Sources */,
+				4D5F11F11BAA7145005AE689 /* NSAttributedString+Processing.m in Sources */,
 				4DF6B7491BA0246D0053EEF7 /* VisibleFormViewController.m in Sources */,
 				4DA207DE1A79DA0A00C7E5C7 /* UIColor+JSQMessages.m in Sources */,
 				4DD5462F1B9E8D5C00543B81 /* ScheduleTableViewCell.m in Sources */,
@@ -2529,6 +2583,7 @@
 				4DA209121A7A0E0000C7E5C7 /* TabBarViewController.m in Sources */,
 				4DA207FD1A79DA0A00C7E5C7 /* JSQMessagesLabel.m in Sources */,
 				4DA41DF31A80804600184A18 /* IssuesViewController.m in Sources */,
+				4D5F11F31BAA7145005AE689 /* PatternDescriptor.m in Sources */,
 				4DD6FEA21A884CFF00CBBE1D /* SDWebImageDecoder.m in Sources */,
 				4DD6FEA31A884CFF00CBBE1D /* SDWebImageDownloader.m in Sources */,
 				4DA207F41A79DA0A00C7E5C7 /* JSQMessagesCellTextView.m in Sources */,
@@ -2542,10 +2597,12 @@
 				4D81D4451AB6B96500A403C9 /* RouInitializerViewController.m in Sources */,
 				4DA22FB51A7F332D00A7AAEC /* SettingsViewController.m in Sources */,
 				4D91D5F21A906F5200A21DBA /* FPPopoverKeyboardResponsiveController.m in Sources */,
+				4D5F11F21BAA7145005AE689 /* ResponsiveLabel.m in Sources */,
 				4D0C2F8C1A7B4C98009E5E53 /* Post.m in Sources */,
 				4D26F4C11AE72FDA00992319 /* UIImage+Additional.m in Sources */,
 				4DA207F11A79DA0A00C7E5C7 /* JSQMessagesBubbleImage.m in Sources */,
 				4D8C47F41AA0270F006DF588 /* NSData+Base64.m in Sources */,
+				4D5F11F41BAA7145005AE689 /* InlineTextAttachment.m in Sources */,
 				4DA2090C1A7A09A000C7E5C7 /* DDFileLogger.m in Sources */,
 				4DCBBD6A1B8C45E00042CDC9 /* BNRDynamicTypeManager.m in Sources */,
 				4DD546201B9E8A3500543B81 /* JobListTableViewCell.m in Sources */,
@@ -2591,6 +2648,7 @@
 				4DE801921AD2508F008B0236 /* Survey.m in Sources */,
 				4D0717951AB0108C0055191A /* QrCodeViewController.m in Sources */,
 				4DA207E61A79DA0A00C7E5C7 /* JSQMessagesBubbleImageFactory.m in Sources */,
+				4D5F11DD1BAA671D005AE689 /* AGPushNoteView.m in Sources */,
 				4DA208011A79DA0A00C7E5C7 /* JSQMessagesToolbarContentView.m in Sources */,
 				4DD6FEAD1A884CFF00CBBE1D /* UIView+WebCacheOperation.m in Sources */,
 				4DA204131A79CC5B00C7E5C7 /* AFHTTPSessionManager.m in Sources */,

@@ -711,6 +711,9 @@
                                                 <imageView userInteractionEnabled="NO" tag="11" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="pin2.png" translatesAutoresizingMaskIntoConstraints="NO" id="SYh-uD-1Tw">
                                                     <rect key="frame" x="8" y="8" width="25" height="25"/>
                                                 </imageView>
+                                                <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="newImgIcn.png" translatesAutoresizingMaskIntoConstraints="NO" id="4WU-6H-MLx">
+                                                    <rect key="frame" x="73" y="9" width="25" height="25"/>
+                                                </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="999" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="29M-os-3wM" customClass="BadgeLabel">
                                                     <rect key="frame" x="566" y="51" width="30" height="30"/>
                                                     <fontDescription key="fontDescription" type="boldSystem" pointSize="14"/>
@@ -724,12 +727,14 @@
                                                 <constraint firstItem="w8M-Ff-YNm" firstAttribute="top" secondItem="SYh-uD-1Tw" secondAttribute="bottom" constant="50" id="3A0-NG-JcP"/>
                                                 <constraint firstItem="Vgv-sF-0wZ" firstAttribute="centerY" secondItem="mJO-bY-14V" secondAttribute="centerY" constant="-1.5" id="4G8-nH-jg6"/>
                                                 <constraint firstItem="SYh-uD-1Tw" firstAttribute="leading" secondItem="Q3Z-C5-mK3" secondAttribute="leadingMargin" id="84S-AH-hDx"/>
+                                                <constraint firstItem="3VU-Rc-g1n" firstAttribute="top" secondItem="4WU-6H-MLx" secondAttribute="top" id="EEW-IS-IJs"/>
                                                 <constraint firstItem="Ah2-SA-x4L" firstAttribute="top" secondItem="Vgv-sF-0wZ" secondAttribute="top" id="G9P-iH-yXi"/>
                                                 <constraint firstItem="29M-os-3wM" firstAttribute="trailing" secondItem="fcd-46-5wU" secondAttribute="trailing" constant="4" id="G9t-ff-QV9"/>
                                                 <constraint firstItem="w8M-Ff-YNm" firstAttribute="top" secondItem="Q3Z-C5-mK3" secondAttribute="topMargin" constant="75" id="HPu-Dl-g4a"/>
                                                 <constraint firstItem="w8M-Ff-YNm" firstAttribute="leading" secondItem="Vgv-sF-0wZ" secondAttribute="leading" id="HYP-Ni-g9R"/>
                                                 <constraint firstItem="QPf-Px-e54" firstAttribute="trailing" secondItem="xkB-bL-bS9" secondAttribute="trailing" constant="-5" id="Iy2-6d-Pgf"/>
                                                 <constraint firstItem="xkB-bL-bS9" firstAttribute="leading" secondItem="w8M-Ff-YNm" secondAttribute="trailing" constant="8" symbolic="YES" id="KfZ-zQ-Xhp"/>
+                                                <constraint firstItem="Ah2-SA-x4L" firstAttribute="leading" secondItem="4WU-6H-MLx" secondAttribute="trailing" constant="8" symbolic="YES" id="MT2-ND-DZI"/>
                                                 <constraint firstItem="QPf-Px-e54" firstAttribute="trailing" secondItem="mJO-bY-14V" secondAttribute="trailing" id="MZn-Df-4Oe"/>
                                                 <constraint firstItem="QPf-Px-e54" firstAttribute="leading" secondItem="xkB-bL-bS9" secondAttribute="leading" id="O6q-1Q-qXJ"/>
                                                 <constraint firstItem="xkB-bL-bS9" firstAttribute="top" secondItem="mJO-bY-14V" secondAttribute="bottom" constant="12" id="QLP-bF-0YF"/>
@@ -765,6 +770,7 @@
                                             </constraints>
                                         </tableViewCellContentView>
                                         <connections>
+                                            <outlet property="aNewPostImageView" destination="4WU-6H-MLx" id="PCj-wX-3Kt"/>
                                             <outlet property="addressLabel" destination="mJO-bY-14V" id="bDj-be-BnL"/>
                                             <outlet property="commentsCount" destination="29M-os-3wM" id="8bG-zX-S0S"/>
                                             <outlet property="dateLabel" destination="3VU-Rc-g1n" id="RQH-BS-Lb4"/>
@@ -1842,10 +1848,10 @@
                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
-                                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="UyS-n6-qnE">
+                                                                <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UyS-n6-qnE">
                                                                     <rect key="frame" x="0.0" y="0.0" width="22" height="33"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </imageView>
@@ -2986,14 +2992,14 @@
                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                            <rect key="frame" x="0.0" y="0.0" width="76" height="86"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="excellent.png" translatesAutoresizingMaskIntoConstraints="NO" id="Jcv-OL-9c8">
-                                                    <rect key="frame" x="13" y="8" width="50" height="50"/>
+                                                    <rect key="frame" x="13" y="8" width="24" height="50"/>
                                                 </imageView>
                                                 <label opaque="NO" userInteractionEnabled="NO" tag="2" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="மிக மோசமான" textAlignment="center" lineBreakMode="wordWrap" baselineAdjustment="alignBaselines" minimumFontSize="7" translatesAutoresizingMaskIntoConstraints="NO" id="uEb-SY-Tni">
-                                                    <rect key="frame" x="0.0" y="66" width="76" height="17"/>
+                                                    <rect key="frame" x="0.0" y="66" width="50" height="17"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="17" id="mFh-Jv-6eE"/>
                                                     </constraints>
@@ -4972,11 +4978,11 @@ Please note that, by using the Town Council’s services, you signify that you h
                                                         <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                         <autoresizingMask key="autoresizingMask"/>
                                                         <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
-                                                            <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                                            <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                             <subviews>
                                                                 <imageView userInteractionEnabled="NO" tag="1" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="r0R-q8-mci">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="80" height="80"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="50" height="50"/>
                                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                                                 </imageView>
                                                             </subviews>
@@ -5652,6 +5658,7 @@ Please note that, by using the Town Council’s services, you signify that you h
         <image name="crm_sel" width="545" height="89"/>
         <image name="excellent.png" width="50" height="50"/>
         <image name="jointlogo.png" width="640" height="89"/>
+        <image name="newImgIcn.png" width="25" height="25"/>
         <image name="pin2.png" width="75" height="75"/>
         <image name="radio_off.png" width="20" height="20"/>
         <image name="radio_on.png" width="20" height="20"/>

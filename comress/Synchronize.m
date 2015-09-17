@@ -1713,6 +1713,37 @@
     }];
 }
 
+- (void)updatePostAsSeenForPostId:(NSNumber *)postId
+{
+    if([postId intValue] == 0)
+        return;
+    
+    NSMutableArray *postList = [[NSMutableArray alloc] init];
+    
+    [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        FMResultSet *rs = [db executeQuery:@"select post_id from post where post_id = ?",postId];
+        
+        while ([rs next]) {
+            [postList addObject:@{@"PostId":[NSNumber numberWithInt:[rs intForColumn:@"post_id"]]}];
+        }
+    }];
+    
+    if(postList.count == 0)
+        return;
+    
+    NSDictionary *params = @{@"postList":postList};
+  
+    [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url,api_update_post_as_seen] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        DDLogVerbose(@"post as seen %@",responseObject);
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        
+        DDLogVerbose(@"%@ [%@-%@]",error,THIS_FILE,THIS_METHOD);
+        
+    }];
+}
+
 
 #pragma mark - upload resident info edit: called on demand
 - (void)uploadResidentInfoEditForSurveyId:(NSNumber *)surveyId
@@ -2311,6 +2342,12 @@
             NSDate *LastUpdatedDate = [myDatabase createNSDateWithWcfDateString:[dictPost valueForKey:@"LastUpdatedDate"]];
             NSNumber *contractType = [NSNumber numberWithInt:[[dictPost valueForKey:@"PostGroup"] intValue]];
             NSNumber *relatedPostId = [NSNumber numberWithInt:[[dictPost valueForKey:@"relatedPostId"] intValue]];
+            NSNumber *IsNew = [NSNumber numberWithBool:[[dictPost valueForKey:@"IsNew"] boolValue]];
+            
+            if([IsNew boolValue] == YES)
+                IsNew = [NSNumber numberWithBool:NO];
+            else
+                IsNew = [NSNumber numberWithBool:YES];
             
             fromUser = PostBy;
             msgFromUser = PostTopic;
@@ -2320,7 +2357,7 @@
                 FMResultSet *rsPost = [theDb executeQuery:@"select post_id from post where post_id = ?",PostId];
                 if([rsPost next] == NO) //does not exist. insert
                 {
-                    BOOL qIns = [theDb executeUpdate:@"insert into post (status, block_id, level, address, post_by, post_id, post_topic, post_type, postal_code, severity, post_date, updated_on,seen,contract_type, dueDate, relatedPostId) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",ActionStatus, BlkId, Level, Location, PostBy, PostId, PostTopic, PostType, PostalCode, Severity, PostDate,LastUpdatedDate,[NSNumber numberWithBool:NO],contractType,DueDate,relatedPostId];
+                    BOOL qIns = [theDb executeUpdate:@"insert into post (status, block_id, level, address, post_by, post_id, post_topic, post_type, postal_code, severity, post_date, updated_on,seen,contract_type, dueDate, relatedPostId) values (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)",ActionStatus, BlkId, Level, Location, PostBy, PostId, PostTopic, PostType, PostalCode, Severity, PostDate,LastUpdatedDate,IsNew,contractType,DueDate,relatedPostId];
                     
                     if(!qIns)
                     {
@@ -2332,7 +2369,7 @@
                 {
                     if([PostId intValue] > 0)
                     {
-                        BOOL qUps = [theDb executeUpdate:@"update post set status = ?, block_id = ?, level = ?, address = ?, post_by = ?, post_topic = ?, post_type = ?, postal_code = ?, severity = ?, post_date = ? ,contract_type = ?, dueDate = ?, updated_on = ?, relatedPostId = ?, seen = ?  where post_id = ?",ActionStatus,BlkId,Level,Location,PostBy,PostTopic,PostType,PostalCode,Severity,PostDate,contractType,DueDate,LastUpdatedDate,relatedPostId,[NSNumber numberWithBool:YES],PostId];
+                        BOOL qUps = [theDb executeUpdate:@"update post set status = ?, block_id = ?, level = ?, address = ?, post_by = ?, post_topic = ?, post_type = ?, postal_code = ?, severity = ?, post_date = ? ,contract_type = ?, dueDate = ?, updated_on = ?, relatedPostId = ?, seen = ?  where post_id = ?",ActionStatus,BlkId,Level,Location,PostBy,PostTopic,PostType,PostalCode,Severity,PostDate,contractType,DueDate,LastUpdatedDate,relatedPostId,IsNew,PostId];
                         
                         if(!qUps)
                         {

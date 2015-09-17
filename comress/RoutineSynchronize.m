@@ -10,9 +10,12 @@
 
 @implementation RoutineSynchronize
 
+@synthesize isFinishedUploadingSchedule;
+
 -(id)init {
     if (self = [super init]) {
         myDatabase = [Database sharedMyDbManager];
+        isFinishedUploadingSchedule = YES;
     }
     return self;
 }
@@ -47,6 +50,7 @@
 
 - (void)uploadUnlockBlockInfoFromSelf:(BOOL)fromSelf
 {
+
     NSMutableArray *unlockList = [[NSMutableArray alloc] init];
     
     NSNumber *needToSync = [NSNumber numberWithInt:1];
@@ -131,6 +135,7 @@
 
 - (void)uploadScheduleImageFromSelf:(BOOL)fromSelf
 {
+
     __block NSArray *scheduleImageList;
     
     [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
@@ -228,31 +233,75 @@
 
 - (void)uploadScheduleUpdateFromSelf:(BOOL)fromSelf
 {
+ 
+    if(isFinishedUploadingSchedule == NO)
+    {
+        if(fromSelf)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self uploadCheckListUpdateFromSelf:fromSelf];
+            });
+        }
+        return;
+    }
+        
     NSMutableArray *scheduleList = [[NSMutableArray alloc] init];
     NSNumber *needToSync = [NSNumber numberWithInt:2];
     NSNumber *schedulePickedUp = [NSNumber numberWithInt:3];
     NSNumber *syncFinished = [NSNumber numberWithInt:1];
     
+    __block BOOL aCompletedScheduleWasFound = NO;
+    __block NSNumber *completedScheduleId;
+    
     [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
     
         FMResultSet *rs = [db executeQuery:@"select * from rt_schedule_detail where sync_flag = ?",needToSync];
+        
         while ([rs next]) {
             NSNumber *ScheduleId = [NSNumber numberWithInt:[rs intForColumn:@"schedule_id"]];
             NSNumber *Status = [NSNumber numberWithInt:[rs intForColumn:@"status"]];
             NSString *Remarks = [rs stringForColumn:@"remarks"];
             
-            [scheduleList addObject:@{@"ScheduleId":ScheduleId,@"Status":Status,@"Remarks":Remarks}];
+            /*
+                check if the status == 3 //complete, bail out
+            */
             
-            
-            BOOL up2 = [db executeUpdate:@"update rt_schedule_detail set sync_flag = ? where schedule_id = ?",schedulePickedUp,ScheduleId];
-            
-            if(!up2)
+            if([Status intValue] == 3)
             {
-                *rollback = YES;
-                return;
+                aCompletedScheduleWasFound = YES;
+                completedScheduleId = ScheduleId;
+            }
+            
+            else
+            {
+                [scheduleList addObject:@{@"ScheduleId":ScheduleId,@"Status":Status,@"Remarks":Remarks}];
+                
+                BOOL up2 = [db executeUpdate:@"update rt_schedule_detail set sync_flag = ? where schedule_id = ?",schedulePickedUp,ScheduleId];
+                
+                if(!up2)
+                {
+                    *rollback = YES;
+                    return;
+                }
             }
         }
     }];
+    
+    if(aCompletedScheduleWasFound == YES)
+    {
+        isFinishedUploadingSchedule = NO;
+        
+        [self uploadCheckListImagesWithScheduleId:completedScheduleId];
+        
+        if(fromSelf)
+        {
+            dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+                [self uploadCheckListUpdateFromSelf:fromSelf];
+            });
+        }
+        
+        return;
+    }
     
     if(scheduleList.count == 0)
     {
@@ -268,7 +317,11 @@
     
     NSDictionary *params = @{@"scheduleList":scheduleList};
     
+    isFinishedUploadingSchedule = NO;
+    
     [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url ,api_upload_update_sup_schedule] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        isFinishedUploadingSchedule = YES;
         
         NSArray *AckScheduleImageObj = [responseObject objectForKey:@"AckScheduleObj"];
         
@@ -318,6 +371,7 @@
 
 - (void)uploadCheckListUpdateFromSelf:(BOOL)fromSelf
 {
+
     NSMutableArray *selectedCheckList = [[NSMutableArray alloc] init];
     
     NSNumber *needToSync = [NSNumber numberWithInt:2];
@@ -415,5 +469,237 @@
     });
 }
 
+
+
+#pragma mark - uploading of schedule
+/*
+ 
+ the following methods are only exclusive for schedule with status 3(complete)
+ 
+ */
+
+- (void)uploadCheckListImagesWithScheduleId:(NSNumber *)scheduleId
+{
+    __block NSArray *scheduleImageList;
+    
+    [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        
+        NSNumber *zero = [NSNumber numberWithInt:0];
+        
+        FMResultSet *rs = [db executeQuery:@"select * from rt_schedule_image where schedule_image_id = ? and schedule_id = ? ",zero,scheduleId];
+        
+        while ([rs next]) {
+            NSNumber *CilentScheduleImageId = [NSNumber numberWithInt:[rs intForColumn:@"client_schedule_image_id"]];
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[rs intForColumn:@"schedule_id"]];
+            NSNumber *CheckListId = [NSNumber numberWithInt:[rs intForColumn:@"checklist_id"]];
+            NSNumber *ImageType = [NSNumber numberWithInt:[rs intForColumn:@"image_type"]];
+            NSString *Remark = [rs stringForColumn:@"remark"];
+            
+            NSArray *paths = NSSearchPathForDirectoriesInDomains(NSDocumentDirectory, NSUserDomainMask, YES);
+            NSString *documentsPath = [paths objectAtIndex:0];
+            NSString *filePath = [documentsPath stringByAppendingPathComponent:[rs stringForColumn:@"image_name"]];
+            
+            NSFileManager *fileManager = [[NSFileManager alloc] init];
+            if([fileManager fileExistsAtPath:filePath] == NO) //file does not exist
+                continue ;
+            
+            UIImage *image = [UIImage imageWithContentsOfFile:filePath];
+            NSData *imageData = UIImageJPEGRepresentation(image, 1.0);
+            NSString *imageString = [imageData base64EncodedStringWithSeparateLines:NO];
+            
+            NSDictionary *dict = @{@"CilentScheduleImageId":CilentScheduleImageId,@"ScheduleId":ScheduleId,@"CheckListId":CheckListId,@"ImageType":ImageType,@"Remark":Remark,@"Image":imageString};
+            
+            scheduleImageList = [NSArray arrayWithObject:dict];
+        }
+    }];
+    
+    if(scheduleImageList.count == 0)
+    {
+        [self uploadCheckListWithScheduleId:scheduleId];
+        
+        return;
+    }
+    
+    NSDictionary *params = @{@"scheduleImageList":scheduleImageList};
+    
+    [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url ,api_upload_schedule_image] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSArray *AckScheduleImageObj = [responseObject objectForKey:@"AckScheduleImageObj"];
+        
+        for (NSDictionary *dict in AckScheduleImageObj) {
+            NSNumber *CilentScheduleImageId = [NSNumber numberWithInt:[[dict valueForKey:@"CilentScheduleImageId"] intValue]];
+            NSString *ErrorMessage = [dict valueForKey:@"ErrorMessage"];
+            NSNumber *ScheduleImageId = [NSNumber numberWithInt:[[dict valueForKey:@"ScheduleImageId"] intValue]];
+            
+            if([ErrorMessage isEqual:[NSNull null]])
+            {
+                [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                    
+                    BOOL ups = [db executeUpdate:@"update rt_schedule_image set schedule_image_id = ? where client_schedule_image_id = ?",ScheduleImageId,CilentScheduleImageId];
+                    
+                    if(!ups)
+                    {
+                        *rollback = YES;
+                        return;
+                    }
+                    
+                }];
+            }
+            
+        }
+        
+        [self uploadCheckListWithScheduleId:scheduleId];
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogVerbose(@"%@ [%@-%@]",error.localizedDescription,THIS_FILE,THIS_METHOD);
+        
+        [self uploadCheckListWithScheduleId:scheduleId];
+        
+    }];
+}
+
+- (void)uploadCheckListWithScheduleId:(NSNumber *)scheduleId
+{
+    NSMutableArray *selectedCheckList = [[NSMutableArray alloc] init];
+    
+    NSNumber *needToSync = [NSNumber numberWithInt:2];
+    NSNumber *schedulePickedUp = [NSNumber numberWithInt:3];
+    NSNumber *syncFinished = [NSNumber numberWithInt:1];
+    NSNumber *yesBool = [NSNumber numberWithBool:YES];
+    
+    [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        
+        //get the checklist to upload
+        FMResultSet *rs = [db executeQuery:@"select * from rt_checklist c left join rt_schedule_detail sd on c.schedule_id =  sd.schedule_id where sd.checklist_sync_flag = ? and c.is_checked = ? and c.schedule_id = ?",needToSync,yesBool,scheduleId];
+        
+        while ([rs next]) {
+            NSNumber *CheckListId = [NSNumber numberWithInt:[rs intForColumn:@"checklist_id"]];
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[rs intForColumn:@"schedule_id"]];
+            NSNumber *IsCheck = [NSNumber numberWithBool:YES];
+            
+            [selectedCheckList addObject:@{@"CheckListId":CheckListId,@"ScheduleId":ScheduleId,@"IsCheck":IsCheck}];
+            
+            BOOL up = [db executeUpdate:@"update rt_schedule_detail set checklist_sync_flag = ? where schedule_id = ?",schedulePickedUp,ScheduleId];
+            
+            if(!up)
+            {
+                *rollback = YES;
+                return;
+            }
+        }
+    }];
+    
+    if(selectedCheckList.count == 0)
+    {
+        [self uploadScheduleUpdateWithScheduleId:scheduleId];
+        
+        return;
+    }
+    
+    NSDictionary *params = @{@"selectedCheckList":selectedCheckList};
+    
+    [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url ,api_upload_selected_checklist] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        NSArray *AckSUPCheckListObj = [responseObject objectForKey:@"AckSUPCheckListObj"];
+        
+        for (NSDictionary *dict in AckSUPCheckListObj) {
+            
+            BOOL IsSuccessful = [[dict valueForKey:@"IsSuccessful"] boolValue];
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[[dict valueForKey:@"ScheduleId"] intValue]];
+            
+            if(IsSuccessful == YES)
+            {
+                [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                    
+                    //update schedule to finished sync
+                    BOOL up = [db executeUpdate:@"update rt_schedule_detail set checklist_sync_flag = ? where schedule_id = ?",syncFinished,ScheduleId];
+                    
+                    if(!up)
+                    {
+                        *rollback = YES;
+                        return;
+                    }
+                }];
+            }
+            
+        }
+        
+        [self uploadScheduleUpdateWithScheduleId:scheduleId];
+        
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogVerbose(@"%@ [%@-%@]",error.localizedDescription,THIS_FILE,THIS_METHOD);
+        
+        [self uploadScheduleUpdateWithScheduleId:scheduleId];
+        
+    }];
+}
+
+- (void)uploadScheduleUpdateWithScheduleId:(NSNumber *)scheduleId
+{
+    NSMutableArray *scheduleList = [[NSMutableArray alloc] init];
+    NSNumber *needToSync = [NSNumber numberWithInt:2];
+    NSNumber *schedulePickedUp = [NSNumber numberWithInt:3];
+    NSNumber *syncFinished = [NSNumber numberWithInt:1];
+    
+    [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        
+        FMResultSet *rs = [db executeQuery:@"select * from rt_schedule_detail where sync_flag = ? and schedule_id = ?",needToSync,scheduleId];
+        while ([rs next]) {
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[rs intForColumn:@"schedule_id"]];
+            NSNumber *Status = [NSNumber numberWithInt:[rs intForColumn:@"status"]];
+            NSString *Remarks = [rs stringForColumn:@"remarks"];
+            
+            [scheduleList addObject:@{@"ScheduleId":ScheduleId,@"Status":Status,@"Remarks":Remarks}];
+            
+            BOOL up2 = [db executeUpdate:@"update rt_schedule_detail set sync_flag = ? where schedule_id = ?",schedulePickedUp,ScheduleId];
+            
+            if(!up2)
+            {
+                *rollback = YES;
+                return;
+            }
+        }
+    }];
+    
+    if(scheduleList.count == 0)
+    {
+        return;
+    }
+    
+    NSDictionary *params = @{@"scheduleList":scheduleList};
+    
+    [myDatabase.AfManager POST:[NSString stringWithFormat:@"%@%@",myDatabase.api_url ,api_upload_update_sup_schedule] parameters:params success:^(AFHTTPRequestOperation *operation, id responseObject) {
+        
+        isFinishedUploadingSchedule = YES;
+        
+        NSArray *AckScheduleImageObj = [responseObject objectForKey:@"AckScheduleObj"];
+        
+        for (NSDictionary *dict in AckScheduleImageObj) {
+            NSString *ErrorMessage = [dict valueForKey:@"ErrorMessage"];
+            BOOL IsSuccessful = [[dict valueForKey:@"IsSuccessful"] boolValue];
+            NSNumber *ScheduleId = [NSNumber numberWithInt:[[dict valueForKey:@"ScheduleId"] intValue]];
+            
+            if([ErrorMessage isEqual:[NSNull null]] && IsSuccessful == YES)
+            {
+                [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+                    
+                    //update schedule to finished sync
+                    BOOL up = [db executeUpdate:@"update rt_schedule_detail set sync_flag = ? where schedule_id = ?",syncFinished,ScheduleId];
+                    
+                    if(!up)
+                    {
+                        *rollback = YES;
+                        return;
+                    }
+                }];
+            }
+        }
+        
+    } failure:^(AFHTTPRequestOperation *operation, NSError *error) {
+        DDLogVerbose(@"%@ [%@-%@]",error.localizedDescription,THIS_FILE,THIS_METHOD);
+    }];
+}
 
 @end

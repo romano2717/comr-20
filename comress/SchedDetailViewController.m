@@ -27,7 +27,7 @@
 
 @property (nonatomic)  int imageType; //1: before, 2: after
 
-@property (nonatomic) int scheduleImagePairCounter;
+@property (nonatomic, strong) NSNumber *scheduleImagePairCounter;
 
 @property (nonatomic) BOOL photoPairIsOk;
 
@@ -107,6 +107,13 @@
     [self getScheduleDetail];
 }
 
+- (void)viewWillDisappear:(BOOL)animated
+{
+    [super viewWillDisappear:animated];
+    
+    DDLogVerbose(@"%@",_scheduleImagePairCounter);
+}
+
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
 {
     [self.view endEditing:YES];
@@ -123,7 +130,7 @@
     //store non existing image
     NSMutableArray *imagesDoesNotExistArray = [[NSMutableArray alloc] init];
     
-    _scheduleImagePairCounter = 0;
+    _scheduleImagePairCounter = [NSNumber numberWithInt:0];
     
     [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
         
@@ -258,7 +265,7 @@
         
         //get the  number of paired images for this schedule
         NSArray *theChecklistArray = [mutScheduleDict objectForKey:@"CheckListArray"];
-        
+        int imgPairCtr = 0;
         for (NSDictionary *dict in theChecklistArray) {
             NSNumber *checklistId = [NSNumber numberWithInt:[[dict valueForKey:@"CheckListId"] intValue]];
             
@@ -271,8 +278,9 @@
             
 
             if([rsCheckForBeforeImg next] && [rsCheckForAfterImg next])
-                _scheduleImagePairCounter++;
+                imgPairCtr++;
         }
+        _scheduleImagePairCounter = [NSNumber numberWithInt:imgPairCtr];
     }];
     
     if(imagesDoesNotExistArray.count > 0)
@@ -712,9 +720,7 @@
     {
         [self startJobWithStatus:-1];
         
-        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"COMRESS" message:@"Updated!" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
-        
-        [alert show];
+        [AGPushNoteView showWithNotificationMessage:@"Schedule Updated!"];
     }
 }
 
@@ -875,30 +881,66 @@
 
 - (void)completeJob
 {
+    //check if atleast one checklist is checked under this schedule
+    __block BOOL atleastOneCheckListIsChecked = NO;
+    
+    [myDatabase.databaseQ inTransaction:^(FMDatabase *db, BOOL *rollback) {
+        
+        NSNumber *scheduleId = [NSNumber numberWithInt:[[_scheduleDetailDictionary valueForKeyPath:@"SUPSchedule.ScheduleId"] intValue]];
+        NSNumber *isChecked = [NSNumber numberWithBool:YES];
+        
+        FMResultSet *rs = [db executeQuery:@"select checklist_id from rt_checklist where schedule_id = ? and is_checked = ?",scheduleId,isChecked];
+        
+        if([rs next])
+            atleastOneCheckListIsChecked = YES;
+    }];
+    
+    if(atleastOneCheckListIsChecked == NO)
+    {
+        UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"COMRESS" message:@"Please SAVE atleast one checklist" delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
+        
+        [alert show];
+        
+        [self performChecklist];
+        
+        return;
+    }
+    
     int scheduleImageStatus = [[[_scheduleDetailDictionary objectForKey:@"ImageConfig"] valueForKey:@"Status"] intValue];
     
     if(scheduleImageStatus == 1)//optional images
     {
         [self startJobWithStatus:3]; //complete
+        
+        [AGPushNoteView showWithNotificationMessage:@"Schedule Completed!"];
     }
     else if (scheduleImageStatus == 2)// minimum required pair
     {
         int MinNumberOfPair = [[[_scheduleDetailDictionary objectForKey:@"ImageConfig"] valueForKey:@"MinNumberOfPair"] intValue];
-        
-        if(_scheduleImagePairCounter < MinNumberOfPair)
+
+        if([_scheduleImagePairCounter intValue] < MinNumberOfPair)
         {
-            NSString *message = [NSString stringWithFormat:@"Please complete the required photo pair (%d/%d)",_scheduleImagePairCounter,MinNumberOfPair];
+            NSString *message = [NSString stringWithFormat:@"Please complete the required photo pair (%d/%d)",[_scheduleImagePairCounter intValue],MinNumberOfPair];
             
             UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"COMRESS" message:message delegate:nil cancelButtonTitle:@"Okay" otherButtonTitles:nil, nil];
             
             [alert show];
         }
+        else
+        {
+            [self startJobWithStatus:3];
+            
+            [AGPushNoteView showWithNotificationMessage:@"Schedule Completed!"];
+        }
+        
     }
     else if (scheduleImageStatus == 3)//required pair per checklist
     {
         if(_photoPairIsOk)
         {
             [self startJobWithStatus:3];
+            
+            [AGPushNoteView showWithNotificationMessage:@"Schedule Completed!"];
         }
         else
         {

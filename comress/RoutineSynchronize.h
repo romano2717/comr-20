@@ -15,6 +15,8 @@
     Database *myDatabase;
 }
 
+@property (nonatomic) BOOL isFinishedUploadingSchedule;
+
 + (id)sharedRoutineSyncManager;
 
 - (void)startSync;

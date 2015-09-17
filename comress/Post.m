@@ -914,6 +914,8 @@ contract_type;
     Synchronize *sync = [Synchronize sharedManager];
     
     [sync uploadCommentNotiAlreadyReadFromSelf:NO];
+
+    [sync updatePostAsSeenForPostId:serverPostId];
     
     return ok;
 }
